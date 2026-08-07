@@ -11,6 +11,16 @@
             --white: #FFFFFF;
         }
 
+        /* --- CONFIGURATION GLOBALE --- */
+        html {
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -19,7 +29,7 @@
             color: var(--white);
             display: flex;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Empêche le scroll global sur PC */
         }
 
         /* --- SIDEBAR GAUCHE (Réglages) --- */
@@ -29,7 +39,6 @@
             border-right: 2px solid var(--white);
             padding: 20px;
             overflow-y: auto;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -68,16 +77,15 @@
             align-items: center;
         }
 
-        input[type="text"], select {
-            padding: 6px;
+        input[type="text"], select, input[type="color"] {
+            padding: 8px;
             background: transparent;
             border: 1px solid rgba(255,255,255,0.5);
             border-radius: 3px;
             color: var(--white);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-family: 'Inter', sans-serif;
             width: 100%;
-            box-sizing: border-box;
             outline: none;
             transition: border 0.2s;
         }
@@ -87,14 +95,9 @@
         }
         
         input[type="color"] {
-            padding: 2px;
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.5);
-            border-radius: 3px;
-            width: 100%;
-            height: 35px;
+            height: 40px;
             cursor: pointer;
-            box-sizing: border-box;
+            padding: 2px;
         }
 
         select option {
@@ -102,22 +105,25 @@
             color: var(--white);
         }
 
+        /* Personnalisation des Curseurs (adaptés au tactile) */
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
             background: transparent;
+            padding: 5px 0;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 12px;
-            width: 12px;
+            height: 16px;
+            width: 16px;
             background: var(--white);
             cursor: pointer;
-            margin-top: -4px;
+            margin-top: -6px;
+            border-radius: 2px;
         }
         input[type="range"]::-webkit-slider-runnable-track {
             width: 100%;
-            height: 3px;
+            height: 4px;
             cursor: pointer;
             background: rgba(255,255,255,0.3);
         }
@@ -126,11 +132,12 @@
             background-color: transparent;
             color: var(--white);
             border: 1px solid var(--white);
-            padding: 6px;
+            padding: 8px;
             font-size: 0.8rem;
             cursor: pointer;
             text-transform: uppercase;
             width: 100%;
+            transition: background 0.2s;
         }
         .btn-toggle:hover {
             background-color: var(--white);
@@ -161,12 +168,17 @@
 
         .canvas-container {
             margin-bottom: 30px;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
         }
 
         canvas {
             background-color: var(--white);
             border: 2px solid var(--white);
-            max-width: 100%;
+            width: 100%;
+            height: auto;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
 
@@ -178,29 +190,37 @@
             background: rgba(255,255,255,0.05);
             padding: 15px 25px;
             border: 1px solid rgba(255,255,255,0.2);
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .action-group {
             display: flex;
-            gap: 5px;
+            gap: 10px;
             align-items: center;
             border-right: 1px solid rgba(255,255,255,0.2);
             padding-right: 15px;
         }
 
-        .action-group:last-child { border: none; padding-right: 0; }
+        .action-group:last-child { 
+            border: none; 
+            padding-right: 0; 
+        }
 
-        .btn-primary {
-            background-color: var(--white);
-            color: var(--blue);
-            border: none;
+        .btn-primary, .btn-vasy {
             padding: 10px 20px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
             font-family: 'Inter', sans-serif;
-            transition: transform 0.1s;
+            transition: transform 0.1s, background 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: var(--white);
+            color: var(--blue);
+            border: none;
         }
         .btn-primary:active { transform: scale(0.95); }
 
@@ -208,16 +228,80 @@
             background-color: transparent;
             color: var(--white);
             border: 2px solid var(--white);
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
         }
-        .btn-vasy:hover {
+        .btn-vasy:hover, .btn-vasy:active {
             background-color: var(--white);
             color: var(--blue);
+        }
+
+        /* =========================================
+           ADAPTATION MOBILE (Responsive & Fluide)
+           ========================================= */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow: visible; /* Permet de scroller la page sur mobile */
+            }
+
+            .main-content {
+                order: 1; /* Affiche le canvas en premier */
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background-color: var(--blue);
+                padding: 15px 10px;
+                border-bottom: 2px solid var(--white);
+                box-shadow: 0 10px 15px rgba(17, 0, 255, 0.9);
+            }
+
+            .sidebar {
+                order: 2; /* Les réglages passent en dessous */
+                width: 100%;
+                border-right: none;
+                overflow-y: visible; /* Annule le scroll interne, on utilise le scroll global */
+                padding: 20px;
+            }
+
+            .site-title {
+                position: relative;
+                top: 0;
+                right: 0;
+                font-size: 1.8rem;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .canvas-container {
+                margin-bottom: 15px;
+            }
+
+            .action-bar {
+                padding: 10px;
+                width: 100%;
+            }
+
+            .action-group {
+                border-right: none;
+                padding-right: 0;
+                width: 100%;
+                justify-content: center;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+                padding-bottom: 10px;
+            }
+            .action-group:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+                padding-top: 10px;
+            }
+
+            /* Agrandit légèrement les textes pour le tactile */
+            label { font-size: 0.85rem; padding: 5px 0; }
+            input[type="range"]::-webkit-slider-thumb {
+                height: 20px;
+                width: 20px;
+                margin-top: -8px;
+            }
         }
     </style>
 </head>
@@ -283,7 +367,7 @@
 
         <div class="action-bar">
             <div class="action-group">
-                <select id="exportFormat" style="width: auto; padding: 10px;">
+                <select id="exportFormat" style="width: auto;">
                     <option value="png">PNG (Transparent)</option>
                     <option value="jpeg">JPEG (Fond Blanc)</option>
                 </select>

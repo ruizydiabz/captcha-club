@@ -65,6 +65,7 @@
             opacity: 0.9;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         input[type="text"], select {
@@ -83,6 +84,18 @@
         
         input[type="text"]:focus, select:focus {
             border-color: var(--white);
+        }
+        
+        /* Selecteur de couleur */
+        input[type="color"] {
+            padding: 2px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 3px;
+            width: 100%;
+            height: 35px;
+            cursor: pointer;
+            box-sizing: border-box;
         }
 
         select option {
@@ -151,11 +164,14 @@
             margin-bottom: 30px;
         }
 
+        /* Le canevas parait blanc à l'écran, mais reste transparent en PNG */
         canvas {
             background-color: var(--white);
             border: 2px solid var(--white);
             max-width: 100%;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            /* Ajout d'un damier subtil pour bien voir la transparence du PNG visuellement si besoin, 
+               mais on laisse fond blanc pour l'esthétique du site */
         }
 
         /* --- BARRE D'ACTIONS --- */
@@ -224,6 +240,10 @@
                 <select id="fontStyle"></select>
             </div>
             <div class="control-group">
+                <label>Couleur du texte</label>
+                <input type="color" id="textColor" value="#000000">
+            </div>
+            <div class="control-group">
                 <button class="btn-toggle" id="toggleStyleBtn">Style : Rempli</button>
             </div>
         </div>
@@ -260,14 +280,15 @@
         <h1 class="site-title">captcha's club</h1>
         
         <div class="canvas-container">
+            <!-- Le canvas n'a plus de fond dessiné en JS, la transparence reste pour le PNG -->
             <canvas id="captchaCanvas" width="500" height="180"></canvas>
         </div>
 
         <div class="action-bar">
             <div class="action-group">
                 <select id="exportFormat" style="width: auto; padding: 10px;">
-                    <option value="png">PNG</option>
-                    <option value="jpeg">JPEG</option>
+                    <option value="png">PNG (Transparent)</option>
+                    <option value="jpeg">JPEG (Fond Blanc)</option>
                 </select>
                 <button class="btn-primary" id="exportBtn">Exporter</button>
             </div>
@@ -314,6 +335,7 @@
         function renderCaptcha() {
             const text = document.getElementById('textInput').value || " ";
             const font = document.getElementById('fontStyle').value;
+            const textColor = document.getElementById('textColor').value;
             
             const posX = parseFloat(document.getElementById('posX').value);
             const posY = parseFloat(document.getElementById('posY').value);
@@ -330,11 +352,8 @@
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
 
+            // Effacer le canevas complet pour garder le fond transparent
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Obligation de dessiner un rectangle blanc massif pour le JPEG
-            ctx.fillStyle = '#FFFFFF'; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.filter = `blur(${blur}px)`;
 
@@ -343,8 +362,10 @@
             ctx.font = `bold ${fontSize}px "${font}", sans-serif`;
             ctx.textBaseline = "middle";
             ctx.textAlign = "center";
-            ctx.fillStyle = '#1100FF'; 
-            ctx.strokeStyle = '#1100FF';
+            
+            // Appliquer la couleur choisie par l'utilisateur
+            ctx.fillStyle = textColor; 
+            ctx.strokeStyle = textColor;
             ctx.lineWidth = 3;
 
             let totalWidth = 0;
@@ -400,23 +421,46 @@
             document.getElementById('waveFreq').value = (Math.random() * 3).toFixed(1);
             document.getElementById('blur').value = Math.random() > 0.6 ? (Math.random() * 3).toFixed(1) : 0;
 
+            // Générer une couleur aléatoire fun
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            document.getElementById('textColor').value = randomColor;
+
             useStroke = Math.random() > 0.8;
             document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
 
             loadGoogleFont(randomFont, renderCaptcha);
         });
 
-        // --- EXPORT avec choix de NOM ---
+        // --- EXPORT avec gestion de fond ---
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
             
-            // Boite de dialogue pour demander le nom
             let fileName = prompt("Entrez le nom de votre fichier :", "mon_captcha");
-            if (!fileName) return; // Annule si l'utilisateur clique sur "Annuler"
+            if (!fileName) return; 
 
             const link = document.createElement('a');
             link.download = `${fileName}.${format}`;
-            link.href = canvas.toDataURL(`image/${format}`, 1.0);
+
+            if (format === 'jpeg') {
+                // Création d'un canevas temporaire pour ajouter le fond blanc
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = canvas.width;
+                tempCanvas.height = canvas.height;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // Dessiner le fond blanc
+                tempCtx.fillStyle = '#FFFFFF';
+                tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+                
+                // Superposer le texte
+                tempCtx.drawImage(canvas, 0, 0);
+                
+                link.href = tempCanvas.toDataURL('image/jpeg', 1.0);
+            } else {
+                // PNG: Conserve le fond transparent du canvas d'origine
+                link.href = canvas.toDataURL('image/png', 1.0);
+            }
+
             link.click();
         });
 

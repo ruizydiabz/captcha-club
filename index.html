@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de CAPTCHA - Édition Rétro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #1100FF; /* Pure vibrant blue from the poster */
+            --white: #FFFFFF;
+        }
+        body {
+            background-color: var(--blue);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Typography mimics the poster */
+        .poster-header {
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+            margin-bottom: 60px;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        h1 {
+            font-family: 'VT323', monospace;
+            font-size: clamp(6rem, 15vw, 12rem);
+            line-height: 0.75;
+            margin: 0;
+            word-wrap: break-word;
+            text-shadow: 
+                3px 3px 0px var(--blue),
+                -1px -1px 0px var(--white),
+                1px -1px 0px var(--white),
+                -1px 1px 0px var(--white),
+                1px 1px 0px var(--white);
+        }
+        
+        /* Scattered texts like in the artwork */
+        .deco-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            max-width: 250px;
+            position: absolute;
+        }
+        .deco-1 {
+            top: 25%;
+            left: 45%;
+        }
+        .deco-2 {
+            bottom: -30px;
+            left: 10%;
+        }
+        
+        /* CAPTCHA Container - Brutalist Style */
+        .captcha-container {
+            border: 2px solid var(--white);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            background: transparent;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .form-group { margin-bottom: 25px; }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        
+        input[type="color"] {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: 2px solid var(--white);
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            font-size: 1.2rem;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+        input[type="text"]::placeholder { color: rgba(255,255,255,0.6); }
+        input[type="text"]:focus { outline: none; background: rgba(255,255,255,0.1); }
+        
+        canvas {
+            border: 2px solid var(--white);
+            display: block;
+            width: 100%;
+            height: 150px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            background-color: var(--blue);
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+        button:hover {
+            background: var(--white);
+            color: var(--blue);
+        }
+        
+        .message {
+            text-align: center;
+            font-weight: 600;
+            min-height: 24px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+        .success { color: #00FF00; }
+        .error { color: #FF0044; }
+
+        @media (max-width: 600px) {
+            .deco-text { position: relative; top: auto; left: auto; margin-top: 20px; margin-bottom: 20px;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="poster-header">
+    <div class="top-bar">
+        <span>Captcha Generator</span>
+        <span>2026</span>
+    </div>
+    <h1>What<br>makes<br>reality<br>real</h1>
+    <div class="deco-text deco-1">(1) Waiting for human validation...<br>Nothing to do but solve a test.<br>It is now 5 minutes late.</div>
+    <div class="deco-text deco-2">(2) nothing has changed<br>except that you are here.</div>
+</div>
+
+<div class="captcha-container">
+    <div class="form-group">
+        <label for="textColor">Couleur du texte :</label>
+        <input type="color" id="textColor" value="#ffffff">
+    </div>
+
+    <canvas id="captchaCanvas" width="500" height="150" title="Cliquez pour régénérer"></canvas>
+    <button id="refreshBtn">Nouveau Visuel</button>
+    
+    <div class="form-group">
+        <label for="captchaInput">Prouvez votre réalité :</label>
+        <input type="text" id="captchaInput" placeholder="Saisir le code..." autocomplete="off">
+    </div>
+    
+    <button id="validateBtn">Valider</button>
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+    let currentCaptchaCode = "";
+    const canvas = document.getElementById('captchaCanvas');
+    const ctx = canvas.getContext('2d');
+    const textColorInput = document.getElementById('textColor');
+    const messageEl = document.getElementById('message');
+
+    function generateRandomString(length) {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    function drawCaptcha() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Background color (Pure Blue)
+        ctx.fillStyle = '#1100FF'; 
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Stylized geometric noise (lines)
+        for(let i = 0; i < 7; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+            ctx.strokeStyle = `rgba(255, 255, 255, 0.3)`;
+            ctx.lineWidth = Math.random() * 5;
+            ctx.stroke();
+        }
+
+        currentCaptchaCode = generateRandomString(5);
+        const selectedColor = textColorInput.value;
+        
+        // Font uses the pixelated font from the poster design
+        ctx.font = "normal 100px 'VT323', monospace"; 
+        ctx.fillStyle = selectedColor;
+        ctx.textBaseline = "middle";
+
+        const totalWidth = canvas.width;
+        const startX = 60;
+        const spacing = (totalWidth - 120) / 5;
+
+        for(let i = 0; i < currentCaptchaCode.length; i++) {
+            ctx.save();
+            const x = startX + (i * spacing);
+            const y = (canvas.height / 2) + (Math.random() * 20 - 10);
+            
+            ctx.translate(x, y);
+            const angle = (Math.random() - 0.5) * 0.4; 
+            ctx.rotate(angle);
+            
+            ctx.fillText(currentCaptchaCode[i], 0, 0);
+            ctx.restore();
+        }
+
+        // Retro noise dots (squares to match pixel theme)
+        for(let i = 0; i < 60; i++) {
+            ctx.fillStyle = `rgba(255, 255, 255, 0.4)`;
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 4, 4);
+        }
+
+        document.getElementById('captchaInput').value = "";
+        messageEl.textContent = "";
+        messageEl.className = "message";
+    }
+
+    // Wait for custom fonts to load so the canvas uses VT323 correctly
+    document.fonts.ready.then(function () {
+        drawCaptcha();
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', drawCaptcha);
+    canvas.addEventListener('click', drawCaptcha);
+    textColorInput.addEventListener('input', drawCaptcha);
+
+    document.getElementById('validateBtn').addEventListener('click', () => {
+        const userInput = document.getElementById('captchaInput').value.trim();
+        if (userInput === "") {
+            messageEl.textContent = "Veuillez entrer le code.";
+            messageEl.className = "message error";
+            return;
+        }
+        if (userInput === currentCaptchaCode) {
+            messageEl.textContent = "Réalité confirmée.";
+            messageEl.className = "message success";
+        } else {
+            messageEl.textContent = "Erreur. Réessayez.";
+            messageEl.className = "message error";
+            drawCaptcha();
+        }
+    });
+</script>
+</body>
+</html>

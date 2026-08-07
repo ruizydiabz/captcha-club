@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
-    <!-- Importation des polices -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -153,8 +152,8 @@
         }
 
         canvas {
-            background-color: var(--white); /* FOND BLANC */
-            border: 2px solid var(--white); /* Bordure blanche pour se fondre ou contraster */
+            background-color: var(--white);
+            border: 2px solid var(--white);
             max-width: 100%;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
@@ -212,7 +211,6 @@
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <!-- Base -->
         <div>
@@ -258,7 +256,6 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
         <h1 class="site-title">captcha's club</h1>
         
@@ -266,13 +263,11 @@
             <canvas id="captchaCanvas" width="500" height="180"></canvas>
         </div>
 
-        <!-- ACTIONS -->
         <div class="action-bar">
             <div class="action-group">
                 <select id="exportFormat" style="width: auto; padding: 10px;">
                     <option value="png">PNG</option>
                     <option value="jpeg">JPEG</option>
-                    <option value="svg">SVG</option>
                 </select>
                 <button class="btn-primary" id="exportBtn">Exporter</button>
             </div>
@@ -286,7 +281,6 @@
         const canvas = document.getElementById('captchaCanvas');
         const ctx = canvas.getContext('2d');
         let useStroke = false;
-        let currentDrawData = {}; // Pour l'export SVG
 
         const googleFonts = [
             "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
@@ -321,7 +315,6 @@
             const text = document.getElementById('textInput').value || " ";
             const font = document.getElementById('fontStyle').value;
             
-            // Récupération des curseurs
             const posX = parseFloat(document.getElementById('posX').value);
             const posY = parseFloat(document.getElementById('posY').value);
             const letterSpacing = parseFloat(document.getElementById('letterSpacing').value);
@@ -337,20 +330,14 @@
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
 
-            // Préparation de la sauvegarde SVG
-            currentDrawData = { 
-                text, font, blur, useStroke, chars: [] 
-            };
-
-            // Nettoyage fond (Fond BLANC)
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Obligation de dessiner un rectangle blanc massif pour le JPEG
             ctx.fillStyle = '#FFFFFF'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Application du filtre flou
             ctx.filter = `blur(${blur}px)`;
 
-            // Configuration Typographique (Couleur BLEU)
             ctx.save();
             const fontSize = 50 * scale;
             ctx.font = `bold ${fontSize}px "${font}", sans-serif`;
@@ -360,7 +347,6 @@
             ctx.strokeStyle = '#1100FF';
             ctx.lineWidth = 3;
 
-            // Calcul de la largeur totale pour centrer proprement
             let totalWidth = 0;
             let charWidths = [];
             for(let i = 0; i < text.length; i++) {
@@ -372,44 +358,29 @@
 
             let startX = (canvas.width - totalWidth) / 2 + posX;
 
-            // Rendu Lettre par Lettre
             for(let i = 0; i < text.length; i++) {
                 ctx.save();
                 
-                // Position de la lettre (Incluant l'onde / vague)
                 let x = startX + charWidths[i] / 2;
                 let y = (canvas.height / 2) + posY + Math.sin(i * waveFreq) * waveAmp;
                 
                 ctx.translate(x, y);
-                
-                // Étirement et Inclinaison
                 ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
                 
-                // Rotation aléatoire de la lettre courante
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
-                // Dessin
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
-                
-                // Sauvegarde pour SVG (les matrices SVG sont un peu complexes, on sauvegarde les params basiques)
-                currentDrawData.chars.push({ 
-                    char: text[i], x: x, y: y, 
-                    sx: scaleX, sy: scaleY, skX: skewX, skY: skewY, rot: currentRot 
-                });
 
                 ctx.restore();
-                
-                // Avancer pour la prochaine lettre
                 startX += charWidths[i] + letterSpacing;
             }
 
             ctx.restore();
-            ctx.filter = 'none'; // Réinitialisation du filtre
+            ctx.filter = 'none'; 
         }
 
-        // --- GESTION DU BOUTON "VAS-Y" (ALÉATOIRE COMPLET) ---
         document.getElementById('randomBtn').addEventListener('click', () => {
             const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
             document.getElementById('fontStyle').value = randomFont;
@@ -427,7 +398,7 @@
             document.getElementById('randomRot').value = Math.floor(Math.random() * 45);
             document.getElementById('waveAmp').value = Math.floor(Math.random() * 30);
             document.getElementById('waveFreq').value = (Math.random() * 3).toFixed(1);
-            document.getElementById('blur').value = Math.random() > 0.6 ? (Math.random() * 3).toFixed(1) : 0; // Parfois flou
+            document.getElementById('blur').value = Math.random() > 0.6 ? (Math.random() * 3).toFixed(1) : 0;
 
             useStroke = Math.random() > 0.8;
             document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
@@ -435,45 +406,20 @@
             loadGoogleFont(randomFont, renderCaptcha);
         });
 
-        // --- EXPORT ---
+        // --- EXPORT avec choix de NOM ---
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
             
-            if (format === 'png' || format === 'jpeg') {
-                const link = document.createElement('a');
-                link.download = `captcha.${format}`;
-                link.href = canvas.toDataURL(`image/${format}`, 1.0);
-                link.click();
-            } else if (format === 'svg') {
-                const w = canvas.width; const h = canvas.height;
-                const fontSize = 50 * parseFloat(document.getElementById('scale').value);
-                
-                let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-                    <defs>
-                        <filter id="blurFilter">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="${currentDrawData.blur}" />
-                        </filter>
-                    </defs>
-                    <rect width="100%" height="100%" fill="#FFFFFF"/>
-                    <g filter="${currentDrawData.blur > 0 ? 'url(#blurFilter)' : 'none'}" font-family="${currentDrawData.font}, sans-serif" font-size="${fontSize}px" font-weight="bold" fill="${currentDrawData.useStroke ? 'none' : '#1100FF'}" stroke="${currentDrawData.useStroke ? '#1100FF' : 'none'}" stroke-width="3" text-anchor="middle" dominant-baseline="central">`;
-                
-                currentDrawData.chars.forEach(c => {
-                    // Construction de la matrice de transformation pour SVG : matrix(a, b, c, d, e, f)
-                    // a=scaleX, b=skewY, c=skewX, d=scaleY, e=tx, f=ty
-                    let deg = c.rot * (180 / Math.PI);
-                    svgContent += `<text transform="translate(${c.x}, ${c.y}) matrix(${c.sx}, ${c.skY}, ${c.skX}, ${c.sy}, 0, 0) rotate(${deg})">${c.char}</text>`;
-                });
-                svgContent += `</g></svg>`;
+            // Boite de dialogue pour demander le nom
+            let fileName = prompt("Entrez le nom de votre fichier :", "mon_captcha");
+            if (!fileName) return; // Annule si l'utilisateur clique sur "Annuler"
 
-                const blob = new Blob([svgContent], {type: 'image/svg+xml;charset=utf-8'});
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'captcha.svg';
-                link.click();
-            }
+            const link = document.createElement('a');
+            link.download = `${fileName}.${format}`;
+            link.href = canvas.toDataURL(`image/${format}`, 1.0);
+            link.click();
         });
 
-        // Toggle Style
         const toggleBtn = document.getElementById('toggleStyleBtn');
         toggleBtn.addEventListener('click', () => {
             useStroke = !useStroke;
@@ -481,14 +427,12 @@
             renderCaptcha();
         });
 
-        // Event listeners (sliders)
         const inputs = document.querySelectorAll('input');
         inputs.forEach(input => { input.addEventListener('input', renderCaptcha); });
         fontSelect.addEventListener('change', (e) => {
             loadGoogleFont(e.target.value, renderCaptcha);
         });
 
-        // Initialisation
         loadGoogleFont(fontSelect.value, renderCaptcha);
     </script>
 </body>

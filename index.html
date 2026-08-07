@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
+    <!-- Le Favicon généré en SVG directement dans le code -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231100FF'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -656,7 +658,6 @@
         const inputs = document.querySelectorAll('input:not([type="button"])');
         inputs.forEach(input => { 
             input.addEventListener('input', () => {
-                // Dès qu'on modifie un truc à la main, on désélectionne le favori en cours (optionnel mais UX logique)
                 presetSelect.value = "";
                 renderCaptcha();
             }); 

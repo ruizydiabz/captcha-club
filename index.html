@@ -1,283 +1,309 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de CAPTCHA - Édition Rétro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+    <title>Captcha's Club Generator</title>
     <style>
-        :root {
-            --blue: #1100FF; /* Pure vibrant blue from the poster */
-            --white: #FFFFFF;
-        }
         body {
-            background-color: var(--blue);
-            color: var(--white);
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 40px 20px;
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        /* Top Right Logo */
+        .site-title {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        /* Grid Layout for Controls */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto 60px auto;
+        }
+
+        .column {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            gap: 15px;
         }
-        
-        /* Typography mimics the poster */
-        .poster-header {
-            width: 100%;
-            max-width: 700px;
-            position: relative;
-            margin-bottom: 60px;
-        }
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.4rem;
-            font-weight: 400;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
-        h1 {
-            font-family: 'VT323', monospace;
-            font-size: clamp(6rem, 15vw, 12rem);
-            line-height: 0.75;
-            margin: 0;
-            word-wrap: break-word;
-            text-shadow: 
-                3px 3px 0px var(--blue),
-                -1px -1px 0px var(--white),
-                1px -1px 0px var(--white),
-                -1px 1px 0px var(--white),
-                1px 1px 0px var(--white);
-        }
-        
-        /* Scattered texts like in the artwork */
-        .deco-text {
-            font-size: 0.9rem;
-            line-height: 1.4;
-            max-width: 250px;
-            position: absolute;
-        }
-        .deco-1 {
-            top: 25%;
-            left: 45%;
-        }
-        .deco-2 {
-            bottom: -30px;
-            left: 10%;
-        }
-        
-        /* CAPTCHA Container - Brutalist Style */
-        .captcha-container {
-            border: 2px solid var(--white);
-            padding: 30px;
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-            background: transparent;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .form-group { margin-bottom: 25px; }
-        
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 400;
-            font-size: 1rem;
-        }
-        
-        input[type="color"] {
-            width: 100%;
-            height: 50px;
-            background: transparent;
-            border: 2px solid var(--white);
-            cursor: pointer;
-            padding: 4px;
-        }
-        
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            background: transparent;
-            border: 2px solid var(--white);
-            color: var(--white);
-            font-size: 1.2rem;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-        }
-        input[type="text"]::placeholder { color: rgba(255,255,255,0.6); }
-        input[type="text"]:focus { outline: none; background: rgba(255,255,255,0.1); }
-        
-        canvas {
-            border: 2px solid var(--white);
-            display: block;
-            width: 100%;
-            height: 150px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            background-color: var(--blue);
-        }
-        
-        button {
-            width: 100%;
-            padding: 15px;
-            background: transparent;
-            border: 2px solid var(--white);
-            color: var(--white);
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 15px;
-            font-family: 'Inter', sans-serif;
-        }
-        button:hover {
-            background: var(--white);
-            color: var(--blue);
-        }
-        
-        .message {
-            text-align: center;
-            font-weight: 600;
-            min-height: 24px;
-            font-size: 1.1rem;
-            margin-top: 20px;
-        }
-        .success { color: #00FF00; }
-        .error { color: #FF0044; }
 
-        @media (max-width: 600px) {
-            .deco-text { position: relative; top: auto; left: auto; margin-top: 20px; margin-bottom: 20px;}
+        /* Column Headers (Black Pills) */
+        .col-header {
+            background-color: #000;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* Labels and Inputs */
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            color: #ff0000;
+            font-size: 0.85rem;
+            font-weight: normal;
+        }
+
+        input[type="text"], select {
+            padding: 8px;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Custom Range Slider Styling to match image */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            margin-top: -4px;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+
+        /* Buttons */
+        .btn-black {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Canvas Area */
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        canvas {
+            background-color: #ebebeb;
+            border: 1px solid #ccc;
+            max-width: 100%;
         }
     </style>
 </head>
 <body>
 
-<div class="poster-header">
-    <div class="top-bar">
-        <span>Captcha Generator</span>
-        <span>2026</span>
+    <div class="site-title">captcha's club</div>
+
+    <div class="controls-grid">
+        <!-- Text Column -->
+        <div class="column">
+            <div class="col-header">Text</div>
+            <div class="control-group">
+                <label>Text (max 8)</label>
+                <input type="text" id="textInput" value="gAvTyG5" maxlength="8">
+            </div>
+            <div class="control-group">
+                <label>Font Style</label>
+                <select id="fontStyle">
+                    <option value="Arial">Single Font</option>
+                    <option value="Courier New">Monospace</option>
+                    <option value="Times New Roman">Serif</option>
+                </select>
+            </div>
+            <div class="control-group"><label>Placement</label><input type="range" id="placement" min="-50" max="50" value="0"></div>
+            <div class="control-group"><label>Skew</label><input type="range" id="skew" min="-1" max="1" step="0.1" value="0.2"></div>
+            <div class="control-group"><label>Scale</label><input type="range" id="scale" min="0.5" max="2" step="0.1" value="1"></div>
+            <div class="control-group"><label>Warp</label><input type="range" id="warp" min="0" max="20" value="5"></div>
+            <div class="control-group"><label>Stroke</label><input type="range" id="stroke" min="0" max="5" value="0"></div>
+        </div>
+
+        <!-- Fill/Stroke Column -->
+        <div class="column">
+            <div class="col-header">Fill/Stroke</div>
+            <button class="btn-black">Difference</button>
+        </div>
+
+        <!-- 3D Type Column -->
+        <div class="column">
+            <div class="col-header">3D Type</div>
+            <div class="control-group"><label>Extrude Depth</label><input type="range" id="extrude" min="0" max="20" value="0"></div>
+            <div class="control-group"><label>3D Rotation</label><input type="range" id="rot3d" min="-45" max="45" value="0"></div>
+        </div>
+
+        <!-- Gradient Column -->
+        <div class="column">
+            <div class="col-header">Gradient</div>
+            <div class="control-group"><label>Shift</label><input type="range" id="gradShift" min="0" max="100" value="50"></div>
+            <div class="control-group"><label>Rotation</label><input type="range" id="gradRot" min="0" max="360" value="0"></div>
+        </div>
+
+        <!-- Noise Column -->
+        <div class="column">
+            <div class="col-header">Noise</div>
+            <div class="control-group"><label>Scale</label><input type="range" id="noiseScale" min="1" max="10" value="2"></div>
+            <div class="control-group"><label>Intensity</label><input type="range" id="noiseIntensity" min="0" max="100" value="30"></div>
+        </div>
+
+        <!-- Dots Column -->
+        <div class="column">
+            <div class="col-header">Dots</div>
+            <div class="control-group"><label>Size</label><input type="range" id="dotSize" min="1" max="5" value="2"></div>
+            <div class="control-group"><label>Density</label><input type="range" id="dotDensity" min="0" max="200" value="50"></div>
+            <div class="control-group"><label>Blur</label><input type="range" id="dotBlur" min="0" max="10" value="0"></div>
+        </div>
+
+        <!-- Lines Column -->
+        <div class="column">
+            <div class="col-header">Lines</div>
+            <div class="control-group"><label>Density</label><input type="range" id="lineDensity" min="0" max="30" value="5"></div>
+            <div class="control-group"><label>Thickness</label><input type="range" id="lineThickness" min="1" max="10" value="2"></div>
+            <div class="control-group"><label>Blur</label><input type="range" id="lineBlur" min="0" max="10" value="0"></div>
+            <div class="control-group"><label>Angle Randomness</label><input type="range" id="lineAngle" min="0" max="180" value="45"></div>
+        </div>
+
+        <!-- Stripes Column -->
+        <div class="column">
+            <div class="col-header">Stripes</div>
+            <div class="control-group"><label>Rotation</label><input type="range" id="stripeRot" min="0" max="180" value="0"></div>
+            <div class="control-group"><label>Count</label><input type="range" id="stripeCount" min="0" max="50" value="0"></div>
+            <div class="control-group"><label>Weight</label><input type="range" id="stripeWeight" min="1" max="10" value="2"></div>
+        </div>
+
+        <!-- Grid Column -->
+        <div class="column">
+            <div class="col-header">Grid</div>
+            <div class="control-group"><label>Subdivisions</label><input type="range" id="gridSub" min="0" max="20" value="0"></div>
+            <div class="control-group"><label>Weight</label><input type="range" id="gridWeight" min="1" max="5" value="1"></div>
+        </div>
     </div>
-    <h1>What<br>makes<br>reality<br>real</h1>
-    <div class="deco-text deco-1">(1) Waiting for human validation...<br>Nothing to do but solve a test.<br>It is now 5 minutes late.</div>
-    <div class="deco-text deco-2">(2) nothing has changed<br>except that you are here.</div>
-</div>
 
-<div class="captcha-container">
-    <div class="form-group">
-        <label for="textColor">Couleur du texte :</label>
-        <input type="color" id="textColor" value="#ffffff">
+    <!-- Live Preview -->
+    <div class="canvas-container">
+        <canvas id="captchaCanvas" width="500" height="150"></canvas>
     </div>
 
-    <canvas id="captchaCanvas" width="500" height="150" title="Cliquez pour régénérer"></canvas>
-    <button id="refreshBtn">Nouveau Visuel</button>
-    
-    <div class="form-group">
-        <label for="captchaInput">Prouvez votre réalité :</label>
-        <input type="text" id="captchaInput" placeholder="Saisir le code..." autocomplete="off">
-    </div>
-    
-    <button id="validateBtn">Valider</button>
-    <div id="message" class="message"></div>
-</div>
+    <script>
+        const canvas = document.getElementById('captchaCanvas');
+        const ctx = canvas.getContext('2d');
 
-<script>
-    let currentCaptchaCode = "";
-    const canvas = document.getElementById('captchaCanvas');
-    const ctx = canvas.getContext('2d');
-    const textColorInput = document.getElementById('textColor');
-    const messageEl = document.getElementById('message');
-
-    function generateRandomString(length) {
-        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
-        let result = "";
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-    }
-
-    function drawCaptcha() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Inputs
+        const inputs = document.querySelectorAll('input, select');
         
-        // Background color (Pure Blue)
-        ctx.fillStyle = '#1100FF'; 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Stylized geometric noise (lines)
-        for(let i = 0; i < 7; i++) {
-            ctx.beginPath();
-            ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-            ctx.strokeStyle = `rgba(255, 255, 255, 0.3)`;
-            ctx.lineWidth = Math.random() * 5;
-            ctx.stroke();
-        }
+        function renderCaptcha() {
+            // Get values
+            const text = document.getElementById('textInput').value;
+            const font = document.getElementById('fontStyle').value;
+            const skew = parseFloat(document.getElementById('skew').value);
+            const scale = parseFloat(document.getElementById('scale').value);
+            const placement = parseFloat(document.getElementById('placement').value);
+            const warp = parseFloat(document.getElementById('warp').value);
+            
+            const dotDensity = parseInt(document.getElementById('dotDensity').value);
+            const lineDensity = parseInt(document.getElementById('lineDensity').value);
+            const noiseIntensity = parseInt(document.getElementById('noiseIntensity').value);
 
-        currentCaptchaCode = generateRandomString(5);
-        const selectedColor = textColorInput.value;
-        
-        // Font uses the pixelated font from the poster design
-        ctx.font = "normal 100px 'VT323', monospace"; 
-        ctx.fillStyle = selectedColor;
-        ctx.textBaseline = "middle";
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ebebeb'; // Background color from screenshot
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const totalWidth = canvas.width;
-        const startX = 60;
-        const spacing = (totalWidth - 120) / 5;
+            // 1. Draw Grid / Stripes (simplified for preview)
+            // 2. Draw Lines
+            for(let i = 0; i < lineDensity; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.strokeStyle = `rgba(0, 0, 0, 0.4)`;
+                ctx.lineWidth = document.getElementById('lineThickness').value;
+                ctx.stroke();
+            }
 
-        for(let i = 0; i < currentCaptchaCode.length; i++) {
+            // 3. Draw Dots
+            for(let i = 0; i < dotDensity; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, document.getElementById('dotSize').value, 0, 2 * Math.PI);
+                ctx.fillStyle = `rgba(0, 0, 0, 0.5)`;
+                ctx.fill();
+            }
+
+            // 4. Draw Text
             ctx.save();
-            const x = startX + (i * spacing);
-            const y = (canvas.height / 2) + (Math.random() * 20 - 10);
+            ctx.font = `italic bold ${60 * scale}px ${font}`;
+            ctx.fillStyle = '#000';
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+
+            // Apply transformations (Placement and Skew)
+            ctx.translate(canvas.width / 2 + placement, canvas.height / 2);
+            ctx.transform(1, 0, skew, 1, 0, 0); 
             
-            ctx.translate(x, y);
-            const angle = (Math.random() - 0.5) * 0.4; 
-            ctx.rotate(angle);
+            // Basic Warp Simulation (Drawing letter by letter with slight offsets)
+            if (warp > 0) {
+                let startX = -(ctx.measureText(text).width / 2);
+                for(let i = 0; i < text.length; i++) {
+                    let yOffset = (Math.random() - 0.5) * warp;
+                    ctx.fillText(text[i], startX, yOffset);
+                    startX += ctx.measureText(text[i]).width;
+                }
+            } else {
+                ctx.fillText(text, 0, 0);
+            }
             
-            ctx.fillText(currentCaptchaCode[i], 0, 0);
             ctx.restore();
+
+            // 5. Draw Noise (Pixel level)
+            if (noiseIntensity > 0) {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    if (Math.random() < (noiseIntensity / 1000)) {
+                        data[i] = 0;     // red
+                        data[i+1] = 0;   // green
+                        data[i+2] = 0;   // blue
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+            }
         }
 
-        // Retro noise dots (squares to match pixel theme)
-        for(let i = 0; i < 60; i++) {
-            ctx.fillStyle = `rgba(255, 255, 255, 0.4)`;
-            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 4, 4);
-        }
+        // Attach event listeners to all inputs to update live
+        inputs.forEach(input => {
+            input.addEventListener('input', renderCaptcha);
+        });
 
-        document.getElementById('captchaInput').value = "";
-        messageEl.textContent = "";
-        messageEl.className = "message";
-    }
-
-    // Wait for custom fonts to load so the canvas uses VT323 correctly
-    document.fonts.ready.then(function () {
-        drawCaptcha();
-    });
-
-    document.getElementById('refreshBtn').addEventListener('click', drawCaptcha);
-    canvas.addEventListener('click', drawCaptcha);
-    textColorInput.addEventListener('input', drawCaptcha);
-
-    document.getElementById('validateBtn').addEventListener('click', () => {
-        const userInput = document.getElementById('captchaInput').value.trim();
-        if (userInput === "") {
-            messageEl.textContent = "Veuillez entrer le code.";
-            messageEl.className = "message error";
-            return;
-        }
-        if (userInput === currentCaptchaCode) {
-            messageEl.textContent = "Réalité confirmée.";
-            messageEl.className = "message success";
-        } else {
-            messageEl.textContent = "Erreur. Réessayez.";
-            messageEl.className = "message error";
-            drawCaptcha();
-        }
-    });
-</script>
+        // Initial render
+        renderCaptcha();
+    </script>
 </body>
 </html>

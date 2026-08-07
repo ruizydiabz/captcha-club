@@ -234,7 +234,7 @@
             <div class="control-group">
                 <label>Police Google</label>
                 <select id="fontStyle">
-                    <option value="MIXED">⚡ Mélange de polices</option>
+                    <option value="MIXED">Mélange de polices</option>
                 </select>
             </div>
             <div class="control-group">
@@ -290,7 +290,7 @@
                 <button class="btn-primary" id="exportBtn">Exporter</button>
             </div>
             <div class="action-group">
-                <button class="btn-vasy" id="randomBtn">Vas-y 🎲</button>
+                <button class="btn-vasy" id="randomBtn">Vas-y</button>
             </div>
         </div>
     </main>
@@ -300,7 +300,6 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // Typographies nettoyées : plus propres, géométriques ou manuelles élégantes
         const googleFonts = [
             "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
             "Bebas Neue", "Dancing Script", "Pacifico", "Anton", "Righteous", 
@@ -308,19 +307,18 @@
             "Shadows Into Light", "Amatic SC", "Indie Flower", "Caveat"
         ];
 
-        // Palette de couleurs "tendances" et esthétiques
         const trendyColors = [
-            "#1100FF", // Bleu électrique
-            "#FF3366", // Rose néon/magenta
-            "#00C49F", // Menthe vibrant
-            "#FF6B6B", // Corail doux
-            "#6C5CE7", // Violet moderne
-            "#00B894", // Vert émeraude
-            "#E17055", // Terracotta
-            "#0984E3", // Bleu océan
-            "#D63031", // Rouge franc
-            "#2D3436", // Gris anthracite profond (presque noir)
-            "#000000"  // Noir classique
+            "#1100FF", 
+            "#FF3366", 
+            "#00C49F", 
+            "#FF6B6B", 
+            "#6C5CE7", 
+            "#00B894", 
+            "#E17055", 
+            "#0984E3", 
+            "#D63031", 
+            "#2D3436", 
+            "#000000"  
         ];
 
         const fontSelect = document.getElementById('fontStyle');
@@ -432,7 +430,6 @@
             ctx.filter = 'none'; 
         }
 
-        // Fonction pour piocher une couleur tendance
         function getRandomTrendyColor() {
             return trendyColors[Math.floor(Math.random() * trendyColors.length)];
         }
@@ -462,7 +459,6 @@
             
             document.getElementById('blur').value = Math.random() > 0.9 ? (Math.random() * 1.5).toFixed(1) : 0;
 
-            // Application de la couleur aléatoire tendance
             document.getElementById('textColor').value = getRandomTrendyColor();
 
             useStroke = Math.random() > 0.7; 

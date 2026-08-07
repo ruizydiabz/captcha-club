@@ -234,7 +234,7 @@
             <div class="control-group">
                 <label>Police Google</label>
                 <select id="fontStyle">
-                    <option value="MIXED">⚡ Mélange de polices (Aléatoire)</option>
+                    <option value="MIXED">⚡ Mélange de polices</option>
                 </select>
             </div>
             <div class="control-group">
@@ -300,11 +300,27 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
+        // Typographies nettoyées : plus propres, géométriques ou manuelles élégantes
         const googleFonts = [
             "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
             "Bebas Neue", "Dancing Script", "Pacifico", "Anton", "Righteous", 
-            "Lobster", "Creepster", "Special Elite", "Monoton", "Orbitron", "Nosifer",
+            "Lobster", "Special Elite", "Monoton", "Orbitron", 
             "Shadows Into Light", "Amatic SC", "Indie Flower", "Caveat"
+        ];
+
+        // Palette de couleurs "tendances" et esthétiques
+        const trendyColors = [
+            "#1100FF", // Bleu électrique
+            "#FF3366", // Rose néon/magenta
+            "#00C49F", // Menthe vibrant
+            "#FF6B6B", // Corail doux
+            "#6C5CE7", // Violet moderne
+            "#00B894", // Vert émeraude
+            "#E17055", // Terracotta
+            "#0984E3", // Bleu océan
+            "#D63031", // Rouge franc
+            "#2D3436", // Gris anthracite profond (presque noir)
+            "#000000"  // Noir classique
         ];
 
         const fontSelect = document.getElementById('fontStyle');
@@ -362,7 +378,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = `blur(${blur}px)`;
 
-            const fontSize = 60 * scale; // Un peu plus grand de base pour la lisibilité
+            const fontSize = 60 * scale; 
 
             let letterFonts = [];
             for(let i = 0; i < text.length; i++) {
@@ -416,16 +432,13 @@
             ctx.filter = 'none'; 
         }
 
-        // Générateur de couleurs foncées (pour rester lisible sur fond blanc/clair)
-        function getRandomDarkColor() {
-            const r = Math.floor(Math.random() * 150).toString(16).padStart(2, '0');
-            const g = Math.floor(Math.random() * 150).toString(16).padStart(2, '0');
-            const b = Math.floor(Math.random() * 150).toString(16).padStart(2, '0');
-            return `#${r}${g}${b}`;
+        // Fonction pour piocher une couleur tendance
+        function getRandomTrendyColor() {
+            return trendyColors[Math.floor(Math.random() * trendyColors.length)];
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
-            const useMixed = Math.random() > 0.4; // 60% de chance d'avoir un mélange
+            const useMixed = Math.random() > 0.4; 
             if (useMixed) {
                 document.getElementById('fontStyle').value = "MIXED";
             } else {
@@ -433,27 +446,26 @@
                 document.getElementById('fontStyle').value = randomFont;
             }
 
-            // Valeurs maîtrisées pour garantir l'esthétique et la lisibilité
             document.getElementById('posX').value = Math.floor(Math.random() * 20 - 10);
             document.getElementById('posY').value = Math.floor(Math.random() * 20 - 10);
             document.getElementById('letterSpacing').value = Math.floor(Math.random() * 15 + 2);
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 0.9).toFixed(1); // Entre 0.9 et 1.3
-            document.getElementById('scaleX').value = (Math.random() * 0.4 + 0.8).toFixed(1); // Entre 0.8 et 1.2
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 0.8).toFixed(1); // Entre 0.8 et 1.2
-            document.getElementById('skewX').value = (Math.random() * 0.6 - 0.3).toFixed(2); // Entre -0.3 et 0.3
-            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); // Entre -0.1 et 0.1
+            document.getElementById('scale').value = (Math.random() * 0.4 + 0.9).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
+            document.getElementById('skewX').value = (Math.random() * 0.6 - 0.3).toFixed(2); 
+            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 15); // Max 15 degrés
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15); // Max 15px de vague
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 15); 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15); 
             document.getElementById('waveFreq').value = (Math.random() * 1.5).toFixed(1); 
             
-            // Le flou rend souvent illisible, on le met rarement et léger (1 fois sur 10 max)
             document.getElementById('blur').value = Math.random() > 0.9 ? (Math.random() * 1.5).toFixed(1) : 0;
 
-            document.getElementById('textColor').value = getRandomDarkColor();
+            // Application de la couleur aléatoire tendance
+            document.getElementById('textColor').value = getRandomTrendyColor();
 
-            useStroke = Math.random() > 0.7; // 30% de chance d'avoir le style contour
+            useStroke = Math.random() > 0.7; 
             document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
 
             renderCaptcha();

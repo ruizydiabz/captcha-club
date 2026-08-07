@@ -20,7 +20,7 @@
             color: var(--white);
             display: flex;
             height: 100vh;
-            overflow: hidden; /* Empêche le scroll global */
+            overflow: hidden;
         }
 
         /* --- SIDEBAR GAUCHE (Réglages) --- */
@@ -36,7 +36,6 @@
             gap: 20px;
         }
 
-        /* Scrollbar custom pour la sidebar */
         .sidebar::-webkit-scrollbar { width: 6px; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--white); }
 
@@ -65,6 +64,8 @@
             font-size: 0.75rem;
             font-weight: 400;
             opacity: 0.9;
+            display: flex;
+            justify-content: space-between;
         }
 
         input[type="text"], select {
@@ -90,7 +91,6 @@
             color: var(--white);
         }
 
-        /* Curseurs (Sliders) plus petits */
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
@@ -119,6 +119,7 @@
             font-size: 0.8rem;
             cursor: pointer;
             text-transform: uppercase;
+            width: 100%;
         }
         .btn-toggle:hover {
             background-color: var(--white);
@@ -152,10 +153,10 @@
         }
 
         canvas {
-            background-color: var(--blue);
-            border: 2px solid var(--white);
+            background-color: var(--white); /* FOND BLANC */
+            border: 2px solid var(--white); /* Bordure blanche pour se fondre ou contraster */
             max-width: 100%;
-            box-shadow: 10px 10px 0px rgba(255,255,255,0.1);
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
 
         /* --- BARRE D'ACTIONS --- */
@@ -213,53 +214,47 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <!-- Text -->
+        <!-- Base -->
         <div>
-            <div class="section-title">Texte</div>
+            <div class="section-title">Base</div>
             <div class="control-group">
-                <label>Texte (max 8)</label>
+                <label>Texte</label>
                 <input type="text" id="textInput" value="gAvTyG5" maxlength="8">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
                 <select id="fontStyle"></select>
             </div>
-            <div class="control-group"><label>Position</label><input type="range" id="placement" min="-50" max="50" value="0"></div>
-            <div class="control-group"><label>Inclinaison</label><input type="range" id="skew" min="-1" max="1" step="0.1" value="0.2"></div>
-            <div class="control-group"><label>Échelle</label><input type="range" id="scale" min="0.5" max="2" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Déformation (Warp)</label><input type="range" id="warp" min="0" max="30" value="5"></div>
+            <div class="control-group">
+                <button class="btn-toggle" id="toggleStyleBtn">Style : Rempli</button>
+            </div>
         </div>
 
-        <!-- Style -->
+        <!-- Positionnement -->
         <div>
-            <div class="section-title">Style</div>
-            <button class="btn-toggle" id="toggleStyleBtn">Remplissage / Contour</button>
+            <div class="section-title">Positionnement</div>
+            <div class="control-group"><label>Position X</label><input type="range" id="posX" min="-100" max="100" value="0"></div>
+            <div class="control-group"><label>Position Y</label><input type="range" id="posY" min="-50" max="50" value="0"></div>
+            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-20" max="50" value="5"></div>
         </div>
 
-        <!-- 3D -->
+        <!-- Distorsion -->
         <div>
-            <div class="section-title">Effet 3D</div>
-            <div class="control-group"><label>Profondeur</label><input type="range" id="extrude" min="0" max="20" value="0"></div>
+            <div class="section-title">Distorsion & Étirement</div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.5" max="2.5" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="3" step="0.1" value="1"></div>
+            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3" step="0.1" value="1"></div>
+            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="0.2"></div>
+            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.5" max="1.5" step="0.1" value="0"></div>
         </div>
 
-        <!-- Lignes -->
+        <!-- Chaos & Effets -->
         <div>
-            <div class="section-title">Lignes</div>
-            <div class="control-group"><label>Densité</label><input type="range" id="lineDensity" min="0" max="30" value="5"></div>
-            <div class="control-group"><label>Épaisseur</label><input type="range" id="lineThickness" min="1" max="10" value="2"></div>
-        </div>
-
-        <!-- Points -->
-        <div>
-            <div class="section-title">Points</div>
-            <div class="control-group"><label>Taille</label><input type="range" id="dotSize" min="1" max="5" value="2"></div>
-            <div class="control-group"><label>Densité</label><input type="range" id="dotDensity" min="0" max="200" value="50"></div>
-        </div>
-
-        <!-- Bruit -->
-        <div>
-            <div class="section-title">Bruit (Pixels)</div>
-            <div class="control-group"><label>Intensité</label><input type="range" id="noiseIntensity" min="0" max="100" value="15"></div>
+            <div class="section-title">Chaos & Effets</div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="15"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="40" value="10"></div>
+            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="1.5"></div>
+            <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="10" step="0.5" value="0"></div>
         </div>
     </aside>
 
@@ -268,7 +263,7 @@
         <h1 class="site-title">captcha's club</h1>
         
         <div class="canvas-container">
-            <canvas id="captchaCanvas" width="600" height="200"></canvas>
+            <canvas id="captchaCanvas" width="500" height="180"></canvas>
         </div>
 
         <!-- ACTIONS -->
@@ -291,18 +286,16 @@
         const canvas = document.getElementById('captchaCanvas');
         const ctx = canvas.getContext('2d');
         let useStroke = false;
-        
-        // Variables pour mémoriser les paramètres actuels (utile pour l'export SVG)
-        let currentDrawData = { lines: [], dots: [] };
+        let currentDrawData = {}; // Pour l'export SVG
 
         const googleFonts = [
             "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
             "Bebas Neue", "Dancing Script", "Pacifico", "Anton", "Righteous", 
-            "Lobster", "Creepster", "Special Elite", "Monoton", "Orbitron", "Nosifer"
+            "Lobster", "Creepster", "Special Elite", "Monoton", "Orbitron", "Nosifer",
+            "Shadows Into Light", "Amatic SC", "Indie Flower", "Caveat"
         ];
 
         const fontSelect = document.getElementById('fontStyle');
-
         googleFonts.forEach(font => {
             let option = document.createElement('option');
             option.value = font;
@@ -325,104 +318,124 @@
         }
 
         function renderCaptcha() {
-            const text = document.getElementById('textInput').value;
+            const text = document.getElementById('textInput').value || " ";
             const font = document.getElementById('fontStyle').value;
-            const skew = parseFloat(document.getElementById('skew').value);
-            const scale = parseFloat(document.getElementById('scale').value);
-            const placement = parseFloat(document.getElementById('placement').value);
-            const warp = parseFloat(document.getElementById('warp').value);
-            const extrude = parseInt(document.getElementById('extrude').value);
             
-            const dotDensity = parseInt(document.getElementById('dotDensity').value);
-            const dotSize = parseInt(document.getElementById('dotSize').value);
-            const lineDensity = parseInt(document.getElementById('lineDensity').value);
-            const lineThickness = parseInt(document.getElementById('lineThickness').value);
-            const noiseIntensity = parseInt(document.getElementById('noiseIntensity').value);
+            // Récupération des curseurs
+            const posX = parseFloat(document.getElementById('posX').value);
+            const posY = parseFloat(document.getElementById('posY').value);
+            const letterSpacing = parseFloat(document.getElementById('letterSpacing').value);
+            
+            const scale = parseFloat(document.getElementById('scale').value);
+            const scaleX = parseFloat(document.getElementById('scaleX').value);
+            const scaleY = parseFloat(document.getElementById('scaleY').value);
+            const skewX = parseFloat(document.getElementById('skewX').value);
+            const skewY = parseFloat(document.getElementById('skewY').value);
+            
+            const randomRot = parseFloat(document.getElementById('randomRot').value);
+            const waveAmp = parseFloat(document.getElementById('waveAmp').value);
+            const waveFreq = parseFloat(document.getElementById('waveFreq').value);
+            const blur = parseFloat(document.getElementById('blur').value);
 
-            // Réinitialiser les données mémorisées pour le SVG
-            currentDrawData.lines = [];
-            currentDrawData.dots = [];
+            // Préparation de la sauvegarde SVG
+            currentDrawData = { 
+                text, font, blur, useStroke, chars: [] 
+            };
 
+            // Nettoyage fond (Fond BLANC)
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#1100FF'; 
+            ctx.fillStyle = '#FFFFFF'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Lignes
-            for(let i = 0; i < lineDensity; i++) {
-                let x1 = Math.random() * canvas.width; let y1 = Math.random() * canvas.height;
-                let x2 = Math.random() * canvas.width; let y2 = Math.random() * canvas.height;
-                
-                currentDrawData.lines.push({x1, y1, x2, y2, thickness: lineThickness}); // Sauvegarde
-                
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.strokeStyle = `rgba(255, 255, 255, 0.6)`;
-                ctx.lineWidth = lineThickness;
-                ctx.stroke();
-            }
+            // Application du filtre flou
+            ctx.filter = `blur(${blur}px)`;
 
-            // Points
-            for(let i = 0; i < dotDensity; i++) {
-                let x = Math.random() * canvas.width; let y = Math.random() * canvas.height;
-                currentDrawData.dots.push({x, y, size: dotSize}); // Sauvegarde
-                ctx.fillStyle = `rgba(255, 255, 255, 0.7)`;
-                ctx.fillRect(x, y, dotSize, dotSize);
-            }
-
-            // Texte
+            // Configuration Typographique (Couleur BLEU)
             ctx.save();
             const fontSize = 50 * scale;
             ctx.font = `bold ${fontSize}px "${font}", sans-serif`;
             ctx.textBaseline = "middle";
             ctx.textAlign = "center";
-            ctx.fillStyle = '#FFFFFF';
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 2;
+            ctx.fillStyle = '#1100FF'; 
+            ctx.strokeStyle = '#1100FF';
+            ctx.lineWidth = 3;
 
-            ctx.translate(canvas.width / 2 + placement, canvas.height / 2);
-            ctx.transform(1, 0, skew, 1, 0, 0); 
-            
-            if (extrude > 0) {
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                for(let i = extrude; i > 0; i--) { ctx.fillText(text, i, i); }
-                ctx.fillStyle = '#FFFFFF';
+            // Calcul de la largeur totale pour centrer proprement
+            let totalWidth = 0;
+            let charWidths = [];
+            for(let i = 0; i < text.length; i++) {
+                let w = ctx.measureText(text[i]).width;
+                charWidths.push(w);
+                totalWidth += w;
+            }
+            totalWidth += (text.length - 1) * letterSpacing;
+
+            let startX = (canvas.width - totalWidth) / 2 + posX;
+
+            // Rendu Lettre par Lettre
+            for(let i = 0; i < text.length; i++) {
+                ctx.save();
+                
+                // Position de la lettre (Incluant l'onde / vague)
+                let x = startX + charWidths[i] / 2;
+                let y = (canvas.height / 2) + posY + Math.sin(i * waveFreq) * waveAmp;
+                
+                ctx.translate(x, y);
+                
+                // Étirement et Inclinaison
+                ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
+                
+                // Rotation aléatoire de la lettre courante
+                let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
+                ctx.rotate(currentRot);
+                
+                // Dessin
+                if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
+                else { ctx.fillText(text[i], 0, 0); }
+                
+                // Sauvegarde pour SVG (les matrices SVG sont un peu complexes, on sauvegarde les params basiques)
+                currentDrawData.chars.push({ 
+                    char: text[i], x: x, y: y, 
+                    sx: scaleX, sy: scaleY, skX: skewX, skY: skewY, rot: currentRot 
+                });
+
+                ctx.restore();
+                
+                // Avancer pour la prochaine lettre
+                startX += charWidths[i] + letterSpacing;
             }
 
-            currentDrawData.chars = []; // Sauvegarde pour SVG
-
-            if (warp > 0) {
-                let startX = -(ctx.measureText(text).width / 2);
-                for(let i = 0; i < text.length; i++) {
-                    let yOffset = (Math.random() - 0.5) * warp;
-                    currentDrawData.chars.push({ char: text[i], x: startX, y: yOffset });
-                    
-                    if(useStroke) { ctx.strokeText(text[i], startX, yOffset); } 
-                    else { ctx.fillText(text[i], startX, yOffset); }
-                    
-                    startX += ctx.measureText(text[i]).width;
-                }
-            } else {
-                currentDrawData.chars.push({ char: text, x: 0, y: 0 });
-                if(useStroke) { ctx.strokeText(text, 0, 0); } 
-                else { ctx.fillText(text, 0, 0); }
-            }
             ctx.restore();
-
-            // Bruit pixel (Non inclus dans SVG car trop lourd)
-            if (noiseIntensity > 0) {
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-                for (let i = 0; i < data.length; i += 4) {
-                    if (Math.random() < (noiseIntensity / 1000)) {
-                        data[i] = 255; data[i+1] = 255; data[i+2] = 255;
-                    }
-                }
-                ctx.putImageData(imageData, 0, 0);
-            }
+            ctx.filter = 'none'; // Réinitialisation du filtre
         }
 
-        // --- GESTION DES EXPORTS ---
+        // --- GESTION DU BOUTON "VAS-Y" (ALÉATOIRE COMPLET) ---
+        document.getElementById('randomBtn').addEventListener('click', () => {
+            const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            document.getElementById('fontStyle').value = randomFont;
+
+            document.getElementById('posX').value = Math.floor(Math.random() * 60 - 30);
+            document.getElementById('posY').value = Math.floor(Math.random() * 40 - 20);
+            document.getElementById('letterSpacing').value = Math.floor(Math.random() * 40 - 10);
+            
+            document.getElementById('scale').value = (Math.random() * 1.5 + 0.8).toFixed(1);
+            document.getElementById('scaleX').value = (Math.random() * 1.5 + 0.5).toFixed(1);
+            document.getElementById('scaleY').value = (Math.random() * 1.5 + 0.5).toFixed(1);
+            document.getElementById('skewX').value = (Math.random() * 2 - 1).toFixed(2);
+            document.getElementById('skewY').value = (Math.random() * 1 - 0.5).toFixed(2);
+            
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 45);
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 30);
+            document.getElementById('waveFreq').value = (Math.random() * 3).toFixed(1);
+            document.getElementById('blur').value = Math.random() > 0.6 ? (Math.random() * 3).toFixed(1) : 0; // Parfois flou
+
+            useStroke = Math.random() > 0.8;
+            document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
+
+            loadGoogleFont(randomFont, renderCaptcha);
+        });
+
+        // --- EXPORT ---
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
             
@@ -432,33 +445,23 @@
                 link.href = canvas.toDataURL(`image/${format}`, 1.0);
                 link.click();
             } else if (format === 'svg') {
-                // Construction manuelle d'un fichier SVG basé sur les calculs du canvas
                 const w = canvas.width; const h = canvas.height;
-                const font = document.getElementById('fontStyle').value;
-                const skew = parseFloat(document.getElementById('skew').value);
-                const scale = parseFloat(document.getElementById('scale').value);
-                const placement = parseFloat(document.getElementById('placement').value);
-                const fontSize = 50 * scale;
-
-                let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-                    <rect width="100%" height="100%" fill="#1100FF"/>`;
+                const fontSize = 50 * parseFloat(document.getElementById('scale').value);
                 
-                // SVG Lignes
-                currentDrawData.lines.forEach(l => {
-                    svgContent += `<line x1="${l.x1}" y1="${l.y1}" x2="${l.x2}" y2="${l.y2}" stroke="rgba(255,255,255,0.6)" stroke-width="${l.thickness}"/>`;
-                });
-
-                // SVG Points
-                currentDrawData.dots.forEach(d => {
-                    svgContent += `<rect x="${d.x}" y="${d.y}" width="${d.size}" height="${d.size}" fill="rgba(255,255,255,0.7)"/>`;
-                });
-
-                // SVG Texte
-                const transform = `translate(${w/2 + placement}, ${h/2}) matrix(1, 0, ${skew}, 1, 0, 0)`;
-                svgContent += `<g transform="${transform}" font-family="${font}, sans-serif" font-size="${fontSize}px" font-weight="bold" fill="${useStroke ? 'none' : '#FFFFFF'}" stroke="${useStroke ? '#FFFFFF' : 'none'}" stroke-width="2" text-anchor="middle" dominant-baseline="central">`;
+                let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+                    <defs>
+                        <filter id="blurFilter">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="${currentDrawData.blur}" />
+                        </filter>
+                    </defs>
+                    <rect width="100%" height="100%" fill="#FFFFFF"/>
+                    <g filter="${currentDrawData.blur > 0 ? 'url(#blurFilter)' : 'none'}" font-family="${currentDrawData.font}, sans-serif" font-size="${fontSize}px" font-weight="bold" fill="${currentDrawData.useStroke ? 'none' : '#1100FF'}" stroke="${currentDrawData.useStroke ? '#1100FF' : 'none'}" stroke-width="3" text-anchor="middle" dominant-baseline="central">`;
                 
                 currentDrawData.chars.forEach(c => {
-                    svgContent += `<text x="${c.x}" y="${c.y}">${c.char}</text>`;
+                    // Construction de la matrice de transformation pour SVG : matrix(a, b, c, d, e, f)
+                    // a=scaleX, b=skewY, c=skewX, d=scaleY, e=tx, f=ty
+                    let deg = c.rot * (180 / Math.PI);
+                    svgContent += `<text transform="translate(${c.x}, ${c.y}) matrix(${c.sx}, ${c.skY}, ${c.skX}, ${c.sy}, 0, 0) rotate(${deg})">${c.char}</text>`;
                 });
                 svgContent += `</g></svg>`;
 
@@ -470,36 +473,15 @@
             }
         });
 
-        // --- GESTION DU BOUTON "VAS-Y" (ALÉATOIRE) ---
-        document.getElementById('randomBtn').addEventListener('click', () => {
-            // Choix aléatoire d'une police
-            const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-            document.getElementById('fontStyle').value = randomFont;
-
-            // Aléatoire sur les curseurs
-            document.getElementById('skew').value = (Math.random() * 2 - 1).toFixed(2); // entre -1 et 1
-            document.getElementById('scale').value = (Math.random() * 1.5 + 0.5).toFixed(1); // entre 0.5 et 2.0
-            document.getElementById('placement').value = Math.floor(Math.random() * 100 - 50); // entre -50 et 50
-            document.getElementById('warp').value = Math.floor(Math.random() * 30);
-            document.getElementById('extrude').value = Math.random() > 0.7 ? Math.floor(Math.random() * 10) : 0; // 30% de chance d'avoir de la 3D
-            
-            document.getElementById('lineDensity').value = Math.floor(Math.random() * 30);
-            document.getElementById('dotDensity').value = Math.floor(Math.random() * 150);
-            document.getElementById('noiseIntensity').value = Math.floor(Math.random() * 50);
-            
-            useStroke = Math.random() > 0.7; // 30% de chance d'être en contour vide
-
-            // Charger la nouvelle police puis dessiner
-            loadGoogleFont(randomFont, renderCaptcha);
-        });
-
         // Toggle Style
-        document.getElementById('toggleStyleBtn').addEventListener('click', () => {
+        const toggleBtn = document.getElementById('toggleStyleBtn');
+        toggleBtn.addEventListener('click', () => {
             useStroke = !useStroke;
+            toggleBtn.textContent = useStroke ? "Style : Contour" : "Style : Rempli";
             renderCaptcha();
         });
 
-        // Event listeners pour les inputs
+        // Event listeners (sliders)
         const inputs = document.querySelectorAll('input');
         inputs.forEach(input => { input.addEventListener('input', renderCaptcha); });
         fontSelect.addEventListener('change', (e) => {

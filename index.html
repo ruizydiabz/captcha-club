@@ -86,7 +86,6 @@
             border-color: var(--white);
         }
         
-        /* Selecteur de couleur */
         input[type="color"] {
             padding: 2px;
             background: transparent;
@@ -164,14 +163,11 @@
             margin-bottom: 30px;
         }
 
-        /* Le canevas parait blanc à l'écran, mais reste transparent en PNG */
         canvas {
             background-color: var(--white);
             border: 2px solid var(--white);
             max-width: 100%;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
-            /* Ajout d'un damier subtil pour bien voir la transparence du PNG visuellement si besoin, 
-               mais on laisse fond blanc pour l'esthétique du site */
         }
 
         /* --- BARRE D'ACTIONS --- */
@@ -237,7 +233,9 @@
             </div>
             <div class="control-group">
                 <label>Police Google</label>
-                <select id="fontStyle"></select>
+                <select id="fontStyle">
+                    <option value="MIXED">⚡ Mélange de polices (Aléatoire)</option>
+                </select>
             </div>
             <div class="control-group">
                 <label>Couleur du texte</label>
@@ -280,7 +278,6 @@
         <h1 class="site-title">captcha's club</h1>
         
         <div class="canvas-container">
-            <!-- Le canvas n'a plus de fond dessiné en JS, la transparence reste pour le PNG -->
             <canvas id="captchaCanvas" width="500" height="180"></canvas>
         </div>
 
@@ -332,9 +329,19 @@
             }
         }
 
+        function loadAllFonts(callback) {
+            let loaded = 0;
+            googleFonts.forEach(font => {
+                loadGoogleFont(font, () => {
+                    loaded++;
+                    if(loaded === googleFonts.length && callback) callback();
+                });
+            });
+        }
+
         function renderCaptcha() {
             const text = document.getElementById('textInput').value || " ";
-            const font = document.getElementById('fontStyle').value;
+            const selectedFont = document.getElementById('fontStyle').value;
             const textColor = document.getElementById('textColor').value;
             
             const posX = parseFloat(document.getElementById('posX').value);
@@ -352,25 +359,28 @@
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
 
-            // Effacer le canevas complet pour garder le fond transparent
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.filter = `blur(${blur}px)`;
 
-            ctx.save();
             const fontSize = 50 * scale;
-            ctx.font = `bold ${fontSize}px "${font}", sans-serif`;
-            ctx.textBaseline = "middle";
-            ctx.textAlign = "center";
-            
-            // Appliquer la couleur choisie par l'utilisateur
-            ctx.fillStyle = textColor; 
-            ctx.strokeStyle = textColor;
-            ctx.lineWidth = 3;
 
+            // Assigner une police à chaque lettre (soit unique, soit mélangée)
+            let letterFonts = [];
+            for(let i = 0; i < text.length; i++) {
+                if (selectedFont === "MIXED") {
+                    let randFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+                    letterFonts.push(randFont);
+                } else {
+                    letterFonts.push(selectedFont);
+                }
+            }
+
+            // Calcul de la largeur totale en mesurant chaque lettre avec sa police respective
+            ctx.save();
             let totalWidth = 0;
             let charWidths = [];
             for(let i = 0; i < text.length; i++) {
+                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
                 let w = ctx.measureText(text[i]).width;
                 charWidths.push(w);
                 totalWidth += w;
@@ -378,6 +388,10 @@
             totalWidth += (text.length - 1) * letterSpacing;
 
             let startX = (canvas.width - totalWidth) / 2 + posX;
+
+            ctx.fillStyle = textColor; 
+            ctx.strokeStyle = textColor;
+            ctx.lineWidth = 3;
 
             for(let i = 0; i < text.length; i++) {
                 ctx.save();
@@ -391,6 +405,9 @@
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
+                // Appliquer la police de la lettre spécifique
+                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
+
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
 
@@ -403,8 +420,14 @@
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
-            const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-            document.getElementById('fontStyle').value = randomFont;
+            // 50% de chance d'avoir un mélange de polices, 50% d'avoir une police unique aléatoire
+            const useMixed = Math.random() > 0.5;
+            if (useMixed) {
+                document.getElementById('fontStyle').value = "MIXED";
+            } else {
+                const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+                document.getElementById('fontStyle').value = randomFont;
+            }
 
             document.getElementById('posX').value = Math.floor(Math.random() * 60 - 30);
             document.getElementById('posY').value = Math.floor(Math.random() * 40 - 20);
@@ -421,17 +444,15 @@
             document.getElementById('waveFreq').value = (Math.random() * 3).toFixed(1);
             document.getElementById('blur').value = Math.random() > 0.6 ? (Math.random() * 3).toFixed(1) : 0;
 
-            // Générer une couleur aléatoire fun
             const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
             document.getElementById('textColor').value = randomColor;
 
             useStroke = Math.random() > 0.8;
             document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
 
-            loadGoogleFont(randomFont, renderCaptcha);
+            renderCaptcha();
         });
 
-        // --- EXPORT avec gestion de fond ---
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
             
@@ -442,22 +463,17 @@
             link.download = `${fileName}.${format}`;
 
             if (format === 'jpeg') {
-                // Création d'un canevas temporaire pour ajouter le fond blanc
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Dessiner le fond blanc
                 tempCtx.fillStyle = '#FFFFFF';
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-                
-                // Superposer le texte
                 tempCtx.drawImage(canvas, 0, 0);
                 
                 link.href = tempCanvas.toDataURL('image/jpeg', 1.0);
             } else {
-                // PNG: Conserve le fond transparent du canvas d'origine
                 link.href = canvas.toDataURL('image/png', 1.0);
             }
 
@@ -474,10 +490,17 @@
         const inputs = document.querySelectorAll('input');
         inputs.forEach(input => { input.addEventListener('input', renderCaptcha); });
         fontSelect.addEventListener('change', (e) => {
-            loadGoogleFont(e.target.value, renderCaptcha);
+            if (e.target.value !== "MIXED") {
+                loadGoogleFont(e.target.value, renderCaptcha);
+            } else {
+                renderCaptcha();
+            }
         });
 
-        loadGoogleFont(fontSelect.value, renderCaptcha);
+        // Charger toutes les polices au démarrage pour que le mélange fonctionne instantanément
+        loadAllFonts(() => {
+            renderCaptcha();
+        });
     </script>
 </body>
 </html>

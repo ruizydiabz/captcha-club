@@ -253,7 +253,8 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="Caralms" maxlength="300">
+                <!-- On initialise avec un mot fluide en minuscules -->
+                <input type="text" id="textInput" value="volite" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
@@ -322,9 +323,11 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
+        // Polices "Script" cursives pour reproduire l'effet manuscrit lié
         const googleFonts = [
-            "Playfair Display", "Merriweather", "Lora", "PT Serif", 
-            "Abril Fatface", "Crete Round", "Bree Serif", "Alfa Slab One"
+            "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", 
+            "Yellowtail", "Parisienne", "Allura", "Alex Brush", 
+            "Mr De Haviland", "Leckerli One", "Cookie", "Damion"
         ];
 
         const fontSelect = document.getElementById('fontStyle');
@@ -335,6 +338,27 @@
             fontSelect.appendChild(option);
         });
 
+        // --- GÉNÉRATEUR DE MOTS ---
+        function generateNonsenseWord() {
+            const consonants = "bcdfghjklmnpqrstvwxyz";
+            const vowels = "aeiouy";
+            let word = "";
+            let length = Math.floor(Math.random() * 3) + 6; 
+            let isConsonant = Math.random() > 0.5;
+            
+            for (let i = 0; i < length; i++) {
+                if (isConsonant) {
+                    word += consonants[Math.floor(Math.random() * consonants.length)];
+                } else {
+                    word += vowels[Math.floor(Math.random() * vowels.length)];
+                }
+                isConsonant = !isConsonant; 
+            }
+            // Mots 100% en minuscules pour faciliter les liaisons des polices cursives
+            return word.toLowerCase();
+        }
+
+        // --- GESTION DES FAVORIS (PRESETS) ---
         function loadPresetsList() {
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
             const presetSelect = document.getElementById('presetSelect');
@@ -472,7 +496,7 @@
             let totalWidth = 0;
             let charWidths = [];
             
-            ctx.font = `bold ${fontSize}px "${selectedFont}", serif`;
+            ctx.font = `bold ${fontSize}px "${selectedFont}", cursive`;
             
             for(let i = 0; i < text.length; i++) {
                 let w = ctx.measureText(text[i]).width;
@@ -500,7 +524,7 @@
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
-                ctx.font = `bold ${fontSize}px "${selectedFont}", serif`;
+                ctx.font = `bold ${fontSize}px "${selectedFont}", cursive`;
 
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
@@ -514,24 +538,33 @@
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
+            // Un mot généré en minuscules
+            document.getElementById('textInput').value = generateNonsenseWord();
             document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            
+            // Toujours du noir comme demandé
             document.getElementById('textColor').value = "#000000";
 
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
             
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); 
+            // L'espacement est fortement négatif pour bien attacher la police cursive
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 8 + 4); 
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); 
+            document.getElementById('scale').value = (Math.random() * 0.4 + 1.2).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.3 + 0.7).toFixed(1); // Écrasé en largeur
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.1).toFixed(1); // Étiré en hauteur
             
-            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); 
+            // Inclinaison forte façon italique
+            document.getElementById('skewX').value = (Math.random() * -0.6 - 0.4).toFixed(2); 
             document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); 
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
+            // Rotation individuelle bloquée à 0 pour éviter de casser la ligne fluide des lettres
+            document.getElementById('randomRot').value = 0; 
+            
+            // Vague très prononcée (fluidité)
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 25 + 15); 
+            document.getElementById('waveFreq').value = (Math.random() * 0.6 + 0.6).toFixed(1); 
             
             document.getElementById('blur').value = 0;
 

@@ -253,7 +253,6 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <!-- On laisse le texte choisi par l'utilisateur -->
                 <input type="text" id="textInput" value="valite" maxlength="300">
             </div>
             <div class="control-group">
@@ -323,7 +322,7 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // Polices "Script" et fluides pour un rendu attaché/manuscrit
+        // Polices "Script" cursives pour reproduire l'effet manuscrit
         const googleFonts = [
             "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", 
             "Yellowtail", "Parisienne", "Allura", "Alex Brush", 
@@ -526,23 +525,23 @@
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
             
-            // L'espacement est fortement négatif pour bien attacher la police cursive
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 8 + 4); 
+            // Espacement très doux pour que les lettres se lient sans s'écraser
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 3) + 1; // Donne de -2 à +1
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 1.2).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.3 + 0.7).toFixed(1); // Écrasé en largeur
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.1).toFixed(1); // Étiré en hauteur
+            document.getElementById('scale').value = (Math.random() * 0.3 + 1.1).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.9).toFixed(1); // Moins écrasé
+            document.getElementById('scaleY').value = (Math.random() * 0.3 + 1.0).toFixed(1); // Hauteur normale
             
-            // Inclinaison forte façon italique
-            document.getElementById('skewX').value = (Math.random() * -0.6 - 0.4).toFixed(2); 
-            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
+            // Inclinaison douce façon italique
+            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.2).toFixed(2); 
+            document.getElementById('skewY').value = (Math.random() * 0.1 - 0.05).toFixed(2); 
             
-            // Rotation individuelle bloquée à 0 pour éviter de casser la ligne fluide des lettres
+            // Pas de rotation pour garder la lisibilité des lettres
             document.getElementById('randomRot').value = 0; 
             
-            // Vague très prononcée (fluidité)
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 25 + 15); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.6 + 0.6).toFixed(1); 
+            // Vague douce pour l'effet fluide
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 5); 
+            document.getElementById('waveFreq').value = (Math.random() * 0.5 + 0.5).toFixed(1); 
             
             document.getElementById('blur').value = 0;
 

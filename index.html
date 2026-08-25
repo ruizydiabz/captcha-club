@@ -4,28 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23000000'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Le Favicon généré en SVG directement dans le code -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231100FF'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #FFFFFF;
-            --panel-bg: #F9F9F9;
-            --text-color: #111111;
-            --border-color: #DDDDDD;
-            --accent: #000000;
-            --red: #E63946;
+            --blue: #1100FF;
+            --white: #FFFFFF;
+            --red: #FF3366;
         }
 
         /* --- CONFIGURATION GLOBALE --- */
-        html { box-sizing: border-box; overflow-x: hidden; }
-        *, *:before, *:after { box-sizing: inherit; }
+        html {
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--blue);
+            color: var(--white);
             display: flex;
             height: 100vh;
             overflow: hidden;
@@ -34,8 +38,8 @@
         /* --- SIDEBAR GAUCHE (Réglages) --- */
         .sidebar {
             width: 320px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--border-color);
+            background-color: var(--blue);
+            border-right: 2px solid var(--white);
             padding: 20px;
             overflow-y: auto;
             display: flex;
@@ -44,13 +48,13 @@
         }
 
         .sidebar::-webkit-scrollbar { width: 6px; }
-        .sidebar::-webkit-scrollbar-thumb { background: #CCC; border-radius: 3px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--white); }
 
         .section-title {
-            background-color: var(--accent);
-            color: var(--bg-color);
+            background-color: var(--white);
+            color: var(--blue);
             padding: 5px 10px;
-            border-radius: 6px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -66,12 +70,16 @@
             margin-bottom: 12px;
         }
 
-        .row-group { display: flex; gap: 10px; }
+        .row-group {
+            display: flex;
+            gap: 10px;
+        }
 
         label {
-            color: #555555;
+            color: var(--white);
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 400;
+            opacity: 0.9;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -79,10 +87,10 @@
 
         input[type="text"], select, input[type="color"] {
             padding: 8px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            color: var(--text-color);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 3px;
+            color: var(--white);
             font-size: 0.9rem;
             font-family: 'Inter', sans-serif;
             width: 100%;
@@ -90,9 +98,21 @@
             transition: border 0.2s;
         }
         
-        input[type="text"]:focus, select:focus { border-color: var(--accent); }
-        input[type="color"] { height: 40px; cursor: pointer; padding: 2px; }
+        input[type="text"]:focus, select:focus {
+            border-color: var(--white);
+        }
         
+        input[type="color"] {
+            height: 40px;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        select option {
+            background-color: var(--blue);
+            color: var(--white);
+        }
+
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
@@ -103,36 +123,42 @@
             -webkit-appearance: none;
             height: 16px;
             width: 16px;
-            background: var(--accent);
+            background: var(--white);
             cursor: pointer;
             margin-top: -6px;
-            border-radius: 50%;
+            border-radius: 2px;
         }
         input[type="range"]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #DDDDDD;
-            border-radius: 2px;
+            background: rgba(255,255,255,0.3);
         }
 
         .btn-toggle {
             background-color: transparent;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            color: var(--white);
+            border: 1px solid var(--white);
             padding: 8px;
             font-size: 0.8rem;
-            font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
             width: 100%;
-            transition: all 0.2s;
+            transition: background 0.2s, color 0.2s;
         }
-        .btn-toggle:hover { background-color: var(--accent); color: var(--bg-color); border-color: var(--accent); }
-        
-        .btn-danger { color: var(--red); border-color: #ffb3c1; }
-        .btn-danger:hover { background-color: var(--red); color: var(--bg-color); border-color: var(--red); }
+        .btn-toggle:hover {
+            background-color: var(--white);
+            color: var(--blue);
+        }
+
+        .btn-danger {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        .btn-danger:hover {
+            background-color: var(--red);
+            color: var(--white);
+        }
 
         /* --- CONTENU PRINCIPAL DROITE --- */
         .main-content {
@@ -150,11 +176,10 @@
             top: 20px;
             right: 30px;
             font-size: 2.5rem;
-            font-family: monospace;
+            font-family: 'VT323', monospace;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin: 0;
-            color: var(--text-color);
         }
 
         .canvas-container {
@@ -166,22 +191,21 @@
         }
 
         canvas {
-            background-color: var(--bg-color);
-            border: 2px solid var(--border-color);
+            background-color: var(--white);
+            border: 2px solid var(--white);
             width: 100%;
             height: auto;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
-            border-radius: 4px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
 
+        /* --- BARRE D'ACTIONS --- */
         .action-bar {
             display: flex;
             gap: 15px;
             align-items: center;
-            background: var(--panel-bg);
+            background: rgba(255,255,255,0.05);
             padding: 15px 25px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -190,41 +214,58 @@
             display: flex;
             gap: 10px;
             align-items: center;
-            border-right: 1px solid var(--border-color);
+            border-right: 1px solid rgba(255,255,255,0.2);
             padding-right: 15px;
         }
 
-        .action-group:last-child { border: none; padding-right: 0; }
+        .action-group:last-child { 
+            border: none; 
+            padding-right: 0; 
+        }
 
         .btn-primary, .btn-vasy {
             padding: 10px 20px;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
             font-family: 'Inter', sans-serif;
-            border-radius: 4px;
             transition: transform 0.1s, background 0.2s;
         }
         
-        .btn-primary { background-color: var(--accent); color: var(--bg-color); border: none; }
+        .btn-primary {
+            background-color: var(--white);
+            color: var(--blue);
+            border: none;
+        }
         .btn-primary:active { transform: scale(0.95); }
 
-        .btn-vasy { background-color: transparent; color: var(--text-color); border: 2px solid var(--accent); }
-        .btn-vasy:hover, .btn-vasy:active { background-color: var(--accent); color: var(--bg-color); }
+        .btn-vasy {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+        .btn-vasy:hover, .btn-vasy:active {
+            background-color: var(--white);
+            color: var(--blue);
+        }
 
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: visible; }
             .main-content {
                 order: 1; position: sticky; top: 0; z-index: 100;
-                background-color: var(--bg-color); padding: 15px 10px;
-                border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                background-color: var(--blue); padding: 15px 10px;
+                border-bottom: 2px solid var(--white);
+                box-shadow: 0 10px 15px rgba(17, 0, 255, 0.9);
             }
-            .sidebar { order: 2; width: 100%; border-right: none; overflow-y: visible; padding: 20px; }
+            .sidebar {
+                order: 2; width: 100%; border-right: none;
+                overflow-y: visible; padding: 20px;
+            }
             .site-title { position: relative; top: 0; right: 0; font-size: 1.8rem; text-align: center; margin-bottom: 15px; }
             .canvas-container { margin-bottom: 15px; }
             .action-bar { padding: 10px; width: 100%; }
-            .action-group { border-right: none; padding-right: 0; width: 100%; justify-content: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+            .action-group { border-right: none; padding-right: 0; width: 100%; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
             .action-group:last-child { border-bottom: none; padding-bottom: 0; padding-top: 10px; }
             label { font-size: 0.85rem; padding: 5px 0; }
             input[type="range"]::-webkit-slider-thumb { height: 20px; width: 20px; margin-top: -8px; }
@@ -253,15 +294,17 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="captcha" maxlength="300">
+                <input type="text" id="textInput" value="gAvTyG5" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
-                <select id="fontStyle"></select>
+                <select id="fontStyle">
+                    <option value="MIXED">Mélange de polices</option>
+                </select>
             </div>
             <div class="control-group">
-                <label>Couleur</label>
-                <input type="color" id="textColor" value="#000000">
+                <label>Couleur du texte</label>
+                <input type="color" id="textColor" value="#1100FF">
             </div>
             <div class="control-group">
                 <button class="btn-toggle" id="toggleStyleBtn">Style : Rempli</button>
@@ -273,29 +316,26 @@
             <div class="section-title">Positionnement</div>
             <div class="control-group"><label>Position X</label><input type="range" id="posX" min="-200" max="200" value="0"></div>
             <div class="control-group"><label>Position Y</label><input type="range" id="posY" min="-100" max="100" value="0"></div>
-            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-25" max="40" value="-3"></div>
+            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-10" max="40" value="5"></div>
         </div>
 
         <!-- Distorsion -->
         <div>
             <div class="section-title">Distorsion & Étirement</div>
-            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.3"></div>
-            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="2.0" step="0.1" value="0.9"></div>
-            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3.0" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="-0.4"></div>
-            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="2.0" step="0.1" value="1.0"></div>
+            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.5" max="2.0" step="0.1" value="1.0"></div>
+            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.5" max="2.0" step="0.1" value="1.0"></div>
+            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
+            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-0.5" max="0.5" step="0.1" value="0.0"></div>
         </div>
 
         <!-- Chaos & Effets -->
         <div>
             <div class="section-title">Chaos & Effets</div>
-            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="0"></div>
-            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="15"></div>
-            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="0.8"></div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="45" value="5"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="30" value="5"></div>
+            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="3" step="0.1" value="1.0"></div>
             <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="5" step="0.5" value="0"></div>
-            
-            <div class="control-group"><label>Lignes de brouillage</label><input type="range" id="noiseLines" min="0" max="15" value="3"></div>
-            <div class="control-group"><label>Points (Bruit)</label><input type="range" id="noiseDots" min="0" max="500" value="100"></div>
         </div>
     </aside>
 
@@ -303,7 +343,7 @@
         <h1 class="site-title">captcha's club</h1>
         
         <div class="canvas-container">
-            <canvas id="captchaCanvas" width="400" height="150"></canvas>
+            <canvas id="captchaCanvas" width="500" height="180"></canvas>
         </div>
 
         <div class="action-bar">
@@ -325,23 +365,17 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // --- MEGA LISTE DE POLICES GOOGLE FONTS (+100 polices) ---
         const googleFonts = [
-            // Cursives & Manuscrites (Parfaites pour les Captchas fluides)
-            "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", "Yellowtail", "Parisienne", "Allura", "Alex Brush", "Mr De Haviland", "Leckerli One", "Cookie", "Damion", "Caveat", "Satisfy", "Courgette", "Handlee", "Tangerine", "Kalam", "Marck Script", "Homemade Apple", "Nothing You Could Do", "Covered By Your Grace", "Shadows Into Light", "Amatic SC", "Indie Flower",
-            
-            // Serif (Classiques, élégantes, idéales avec forte distorsion)
-            "Playfair Display", "Merriweather", "Lora", "PT Serif", "Abril Fatface", "Crete Round", "Bree Serif", "Alfa Slab One", "Roboto Slab", "EB Garamond", "Libre Baskerville", "Cormorant Garamond", "Bitter", "Crimson Text", "Arvo", "Zilla Slab", "Josefin Slab", "Vollkorn", "Rokkitt",
-            
-            // Sans-Serif (Modernes, lisibles)
-            "Roboto", "Open Sans", "Lato", "Montserrat", "Oswald", "Source Sans Pro", "Raleway", "Ubuntu", "Poppins", "Nunito", "Rubik", "Work Sans", "Fira Sans", "Quicksand", "Karla", "Mukta", "Inconsolata", "Dosis", "Anton", "Cabin", "Hind", "Fjalla One", "Oxygen", "Signika",
-            
-            // Display / Excentriques (Gros impact visuel)
-            "Righteous", "Bangers", "Carter One", "Fredoka One", "Permanent Marker", "Lobster", "Righteous", "Cinzel", "Acme", "Russo One", "Sigmar One", "Chewy", "Bebas Neue", "Passion One", "Concert One", "Patua One", "Fascinate Inline", "Luckiest Guy", "Titan One", "Squada One", "Creepster", "Eater", "Nosifer", "Freckle Face",
-            
-            // Monospace (Style Code / Hacker)
-            "Roboto Mono", "Space Mono", "Source Code Pro", "IBM Plex Mono", "Inconsolata", "PT Mono", "Share Tech Mono", "Cutive Mono", "VT323", "Anonymous Pro"
-        ].sort(); // Tri alphabétique pour le menu
+            "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
+            "Bebas Neue", "Dancing Script", "Pacifico", "Anton", "Righteous", 
+            "Lobster", "Special Elite", "Monoton", "Orbitron", 
+            "Shadows Into Light", "Amatic SC", "Indie Flower", "Caveat"
+        ];
+
+        const trendyColors = [
+            "#1100FF", "#FF3366", "#00C49F", "#FF6B6B", "#6C5CE7", 
+            "#00B894", "#E17055", "#0984E3", "#D63031", "#2D3436", "#000000"  
+        ];
 
         const fontSelect = document.getElementById('fontStyle');
         googleFonts.forEach(font => {
@@ -351,9 +385,11 @@
             fontSelect.appendChild(option);
         });
 
+        // --- GESTION DES FAVORIS (PRESETS) ---
+        const presetSelect = document.getElementById('presetSelect');
+
         function loadPresetsList() {
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
-            const presetSelect = document.getElementById('presetSelect');
             presetSelect.innerHTML = '<option value="">-- Choisir un favori --</option>';
             for (let name in presets) {
                 let opt = document.createElement('option');
@@ -383,31 +419,32 @@
                 randomRot: document.getElementById('randomRot').value,
                 waveAmp: document.getElementById('waveAmp').value,
                 waveFreq: document.getElementById('waveFreq').value,
-                blur: document.getElementById('blur').value,
-                noiseLines: document.getElementById('noiseLines').value,
-                noiseDots: document.getElementById('noiseDots').value
+                blur: document.getElementById('blur').value
             };
 
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
             presets[name] = preset;
             localStorage.setItem('captchaPresets', JSON.stringify(presets));
             loadPresetsList();
-            document.getElementById('presetSelect').value = name;
+            presetSelect.value = name;
         });
 
         document.getElementById('deletePresetBtn').addEventListener('click', () => {
-            let name = document.getElementById('presetSelect').value;
-            if (!name) return;
+            let name = presetSelect.value;
+            if (!name) {
+                alert("Veuillez d'abord sélectionner un favori à supprimer.");
+                return;
+            }
             if(confirm(`Êtes-vous sûr de vouloir supprimer le favori "${name}" ?`)) {
                 const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
                 delete presets[name];
                 localStorage.setItem('captchaPresets', JSON.stringify(presets));
                 loadPresetsList();
-                document.getElementById('presetSelect').value = "";
+                presetSelect.value = "";
             }
         });
 
-        document.getElementById('presetSelect').addEventListener('change', (e) => {
+        presetSelect.addEventListener('change', (e) => {
             let name = e.target.value;
             if (!name) return;
             
@@ -433,14 +470,16 @@
                 document.getElementById('waveAmp').value = p.waveAmp;
                 document.getElementById('waveFreq').value = p.waveFreq;
                 document.getElementById('blur').value = p.blur;
-                document.getElementById('noiseLines').value = p.noiseLines || 0;
-                document.getElementById('noiseDots').value = p.noiseDots || 0;
 
-                loadGoogleFont(p.font, renderCaptcha);
+                if (p.font !== "MIXED") {
+                    loadGoogleFont(p.font, renderCaptcha);
+                } else {
+                    renderCaptcha();
+                }
             }
         });
+        // -------------------------------------
 
-        // Lazy Loading : Ne charge que la police demandée
         function loadGoogleFont(fontName, callback) {
             const fontId = 'font-' + fontName.replace(/\s+/g, '-').toLowerCase();
             if (!document.getElementById(fontId)) {
@@ -449,42 +488,20 @@
                 link.rel = 'stylesheet';
                 link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}&display=swap`;
                 document.head.appendChild(link);
-                // On attend que la police soit chargée
-                document.fonts.load(`16px "${fontName}"`).then(() => {
-                    if(callback) callback();
-                });
+                document.fonts.load(`16px "${fontName}"`).then(() => callback());
             } else {
-                if(callback) callback();
+                callback();
             }
         }
 
-        function drawNoise(color, numLines, numDots) {
-            ctx.save();
-            ctx.fillStyle = color;
-            ctx.strokeStyle = color;
-
-            // Dessiner les points (mouchetis)
-            for (let i = 0; i < numDots; i++) {
-                ctx.globalAlpha = Math.random() * 0.8 + 0.2;
-                ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            // Dessiner les lignes de brouillage
-            ctx.globalAlpha = 0.7;
-            for (let i = 0; i < numLines; i++) {
-                ctx.lineWidth = Math.random() * 2 + 0.5;
-                ctx.beginPath();
-                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-                ctx.bezierCurveTo(
-                    Math.random() * canvas.width, Math.random() * canvas.height,
-                    Math.random() * canvas.width, Math.random() * canvas.height,
-                    Math.random() * canvas.width, Math.random() * canvas.height
-                );
-                ctx.stroke();
-            }
-            ctx.restore();
+        function loadAllFonts(callback) {
+            let loaded = 0;
+            googleFonts.forEach(font => {
+                loadGoogleFont(font, () => {
+                    loaded++;
+                    if(loaded === googleFonts.length && callback) callback();
+                });
+            });
         }
 
         function renderCaptcha() {
@@ -506,24 +523,27 @@
             const waveAmp = parseFloat(document.getElementById('waveAmp').value);
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
-            
-            const noiseLines = parseInt(document.getElementById('noiseLines').value);
-            const noiseDots = parseInt(document.getElementById('noiseDots').value);
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = `blur(${blur}px)`;
-            
-            drawNoise(textColor, noiseLines, noiseDots);
 
-            const fontSize = 55 * scale; 
+            const fontSize = 60 * scale; 
+
+            let letterFonts = [];
+            for(let i = 0; i < text.length; i++) {
+                if (selectedFont === "MIXED") {
+                    let randFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+                    letterFonts.push(randFont);
+                } else {
+                    letterFonts.push(selectedFont);
+                }
+            }
 
             ctx.save();
             let totalWidth = 0;
             let charWidths = [];
-            
-            ctx.font = `bold ${fontSize}px "${selectedFont}", sans-serif`;
-            
             for(let i = 0; i < text.length; i++) {
+                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
                 let w = ctx.measureText(text[i]).width;
                 charWidths.push(w);
                 totalWidth += w;
@@ -534,7 +554,7 @@
 
             ctx.fillStyle = textColor; 
             ctx.strokeStyle = textColor;
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
 
             for(let i = 0; i < text.length; i++) {
                 ctx.save();
@@ -543,13 +563,12 @@
                 let y = (canvas.height / 2) + posY + Math.sin(i * waveFreq) * waveAmp;
                 
                 ctx.translate(x, y);
-
                 ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
                 
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
-                ctx.font = `bold ${fontSize}px "${selectedFont}", sans-serif`;
+                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
 
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
@@ -562,43 +581,49 @@
             ctx.filter = 'none'; 
         }
 
+        function getRandomTrendyColor() {
+            return trendyColors[Math.floor(Math.random() * trendyColors.length)];
+        }
+
         document.getElementById('randomBtn').addEventListener('click', () => {
-            const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-            document.getElementById('fontStyle').value = randomFont;
-            
-            document.getElementById('textColor').value = "#000000"; 
+            const useMixed = Math.random() > 0.4; 
+            if (useMixed) {
+                document.getElementById('fontStyle').value = "MIXED";
+            } else {
+                const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+                document.getElementById('fontStyle').value = randomFont;
+            }
 
             document.getElementById('posX').value = Math.floor(Math.random() * 20 - 10);
-            document.getElementById('posY').value = Math.floor(Math.random() * 10 - 5);
+            document.getElementById('posY').value = Math.floor(Math.random() * 20 - 10);
+            document.getElementById('letterSpacing').value = Math.floor(Math.random() * 15 + 2);
             
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 6 + 1); 
-            
-            document.getElementById('scale').value = (Math.random() * 0.3 + 1.2).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
-            
-            document.getElementById('skewX').value = (Math.random() * -0.6 - 0.2).toFixed(2); 
+            document.getElementById('scale').value = (Math.random() * 0.4 + 0.9).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
+            document.getElementById('skewX').value = (Math.random() * 0.6 - 0.3).toFixed(2); 
             document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 6); 
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 15); 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15); 
+            document.getElementById('waveFreq').value = (Math.random() * 1.5).toFixed(1); 
             
-            document.getElementById('noiseLines').value = Math.floor(Math.random() * 5 + 2); 
-            document.getElementById('noiseDots').value = Math.floor(Math.random() * 200 + 50); 
-            
-            document.getElementById('blur').value = 0;
+            document.getElementById('blur').value = Math.random() > 0.9 ? (Math.random() * 1.5).toFixed(1) : 0;
 
-            useStroke = false; 
-            document.getElementById('toggleStyleBtn').textContent = "Style : Rempli";
-            document.getElementById('presetSelect').value = "";
-            
-            // Chargement de la police puis rendu
-            loadGoogleFont(randomFont, renderCaptcha);
+            document.getElementById('textColor').value = getRandomTrendyColor();
+
+            useStroke = Math.random() > 0.7; 
+            document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
+
+            // Réinitialise le select des favoris puisqu'on part sur de l'aléatoire
+            presetSelect.value = "";
+
+            renderCaptcha();
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
+            
             let fileName = prompt("Entrez le nom de votre fichier :", "mon_captcha");
             if (!fileName) return; 
 
@@ -611,7 +636,7 @@
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                tempCtx.fillStyle = '#FFFFFF'; 
+                tempCtx.fillStyle = '#FFFFFF';
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
                 tempCtx.drawImage(canvas, 0, 0);
                 
@@ -633,24 +658,24 @@
         const inputs = document.querySelectorAll('input:not([type="button"])');
         inputs.forEach(input => { 
             input.addEventListener('input', () => {
-                document.getElementById('presetSelect').value = "";
+                presetSelect.value = "";
                 renderCaptcha();
             }); 
         });
         
         fontSelect.addEventListener('change', (e) => {
-            document.getElementById('presetSelect').value = "";
-            loadGoogleFont(e.target.value, renderCaptcha);
+            presetSelect.value = "";
+            if (e.target.value !== "MIXED") {
+                loadGoogleFont(e.target.value, renderCaptcha);
+            } else {
+                renderCaptcha();
+            }
         });
 
         // INIT
         loadPresetsList();
-        
-        // Initialiser avec la première police de la liste
-        const initialFont = googleFonts[0];
-        document.getElementById('fontStyle').value = initialFont;
-        loadGoogleFont(initialFont, () => {
-            document.getElementById('randomBtn').click();
+        loadAllFonts(() => {
+            renderCaptcha();
         });
     </script>
 </body>

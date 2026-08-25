@@ -253,8 +253,8 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <!-- On initialise avec un mot fluide en minuscules -->
-                <input type="text" id="textInput" value="volite" maxlength="300">
+                <!-- On laisse le texte choisi par l'utilisateur -->
+                <input type="text" id="textInput" value="valite" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
@@ -323,7 +323,7 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // Polices "Script" cursives pour reproduire l'effet manuscrit lié
+        // Polices "Script" et fluides pour un rendu attaché/manuscrit
         const googleFonts = [
             "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", 
             "Yellowtail", "Parisienne", "Allura", "Alex Brush", 
@@ -337,26 +337,6 @@
             option.textContent = font;
             fontSelect.appendChild(option);
         });
-
-        // --- GÉNÉRATEUR DE MOTS ---
-        function generateNonsenseWord() {
-            const consonants = "bcdfghjklmnpqrstvwxyz";
-            const vowels = "aeiouy";
-            let word = "";
-            let length = Math.floor(Math.random() * 3) + 6; 
-            let isConsonant = Math.random() > 0.5;
-            
-            for (let i = 0; i < length; i++) {
-                if (isConsonant) {
-                    word += consonants[Math.floor(Math.random() * consonants.length)];
-                } else {
-                    word += vowels[Math.floor(Math.random() * vowels.length)];
-                }
-                isConsonant = !isConsonant; 
-            }
-            // Mots 100% en minuscules pour faciliter les liaisons des polices cursives
-            return word.toLowerCase();
-        }
 
         // --- GESTION DES FAVORIS (PRESETS) ---
         function loadPresetsList() {
@@ -538,12 +518,10 @@
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
-            // Un mot généré en minuscules
-            document.getElementById('textInput').value = generateNonsenseWord();
-            document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            // Le texte saisi reste intact, on ne génère plus de mot aléatoire !
             
-            // Toujours du noir comme demandé
-            document.getElementById('textColor').value = "#000000";
+            document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            document.getElementById('textColor').value = "#000000"; // Noir forcé
 
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;

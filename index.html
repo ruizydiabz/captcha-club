@@ -172,7 +172,7 @@
             height: auto;
             box-shadow: 10px 10px 0px rgba(0,0,0,0.05);
             border-radius: 4px;
-            touch-action: none; /* Essentiel pour le drag & drop mobile (empêche le scroll) */
+            touch-action: none;
             cursor: default;
         }
 
@@ -275,26 +275,26 @@
             <div class="section-title">Positionnement</div>
             <div class="control-group"><label>Position X</label><input type="range" id="posX" min="-200" max="200" value="0"></div>
             <div class="control-group"><label>Position Y</label><input type="range" id="posY" min="-100" max="100" value="0"></div>
-            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-25" max="40" value="-3"></div>
+            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-40" max="40" value="-10"></div>
         </div>
 
         <!-- Distorsion -->
         <div>
             <div class="section-title">Distorsion & Étirement</div>
-            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="2.0" step="0.1" value="0.9"></div>
-            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3.0" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="-0.4"></div>
-            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="4.0" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.1" max="4.0" step="0.1" value="0.9"></div>
+            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.1" max="4.0" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-3.0" max="3.0" step="0.1" value="-0.4"></div>
+            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-3.0" max="3.0" step="0.1" value="0.0"></div>
         </div>
 
         <!-- Chaos & Effets -->
         <div>
             <div class="section-title">Chaos & Effets</div>
-            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="2"></div>
-            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="20"></div>
-            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="0.8"></div>
-            <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="5" step="0.5" value="0"></div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="180" value="15"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="100" value="30"></div>
+            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="10" step="0.1" value="1.5"></div>
+            <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="10" step="0.5" value="0"></div>
         </div>
     </aside>
 
@@ -325,8 +325,8 @@
         let useStroke = false;
 
         // Variables pour le Drag & Drop
-        let manualOffsets = []; // Enregistre le décalage manuel (X, Y) pour chaque lettre
-        let clickableZones = []; // Enregistre les zones cliquables des lettres
+        let manualOffsets = []; 
+        let clickableZones = []; 
         let draggingIndex = null;
         let lastMouseX = 0;
         let lastMouseY = 0;
@@ -379,7 +379,7 @@
                 waveAmp: document.getElementById('waveAmp').value,
                 waveFreq: document.getElementById('waveFreq').value,
                 blur: document.getElementById('blur').value,
-                offsets: JSON.parse(JSON.stringify(manualOffsets)) // Sauvegarde des déplacements manuels
+                offsets: JSON.parse(JSON.stringify(manualOffsets))
             };
 
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
@@ -429,7 +429,6 @@
                 document.getElementById('blur').value = p.blur;
 
                 manualOffsets = p.offsets || [];
-
                 loadGoogleFont(p.font, renderCaptcha);
             }
         });
@@ -478,11 +477,10 @@
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
 
-            // Mettre à jour la taille du tableau des déplacements manuels
             while (manualOffsets.length < text.length) manualOffsets.push({x: 0, y: 0});
             manualOffsets = manualOffsets.slice(0, text.length);
             
-            clickableZones = []; // Réinitialise les zones de hit
+            clickableZones = []; 
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = `blur(${blur}px)`;
@@ -510,25 +508,31 @@
             for(let i = 0; i < text.length; i++) {
                 ctx.save();
                 
-                // Calcul de la position de base + Déplacement Manuel
                 let offsetX = manualOffsets[i].x;
                 let offsetY = manualOffsets[i].y;
                 
                 let x = startX + charWidths[i] / 2 + offsetX;
                 let y = (canvas.height / 2) + posY + Math.sin(i * waveFreq) * waveAmp + offsetY;
                 
-                // Enregistrer la position pour le Drag & Drop
                 clickableZones.push({
                     index: i,
                     x: x,
                     y: y,
-                    radius: fontSize * 0.5 // Rayon cliquable
+                    radius: fontSize * 0.5 
                 });
 
                 ctx.translate(x, y);
 
-                ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
+                // --- DÉFORMATION FORTE PAR LETTRE ---
+                // Chaque lettre est écrasée/étirée/inclinée différemment
+                let charScaleX = scaleX * (1 + (Math.random() * 0.6 - 0.3)); 
+                let charScaleY = scaleY * (1 + (Math.random() * 0.6 - 0.3)); 
+                let charSkewX = skewX + (Math.random() * 0.8 - 0.4);
+                let charSkewY = skewY + (Math.random() * 0.6 - 0.3);
+
+                ctx.transform(charScaleX, charSkewY, charSkewX, charScaleY, 0, 0); 
                 
+                // Rotation aléatoire poussée
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
@@ -545,7 +549,7 @@
             ctx.filter = 'none'; 
         }
 
-        // --- GESTION DU DRAG & DROP (SOURIS ET MOBILE) ---
+        // --- GESTION DU DRAG & DROP ---
         function getPointerPos(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -578,7 +582,7 @@
             }
             
             if (closestIndex !== null) {
-                if(e.cancelable) e.preventDefault(); // Empêche le scroll sur mobile
+                if(e.cancelable) e.preventDefault(); 
                 draggingIndex = closestIndex;
                 lastMouseX = pos.x;
                 lastMouseY = pos.y;
@@ -590,7 +594,6 @@
             const pos = getPointerPos(e);
             
             if (draggingIndex === null) {
-                // Changer le curseur en survol
                 let hover = false;
                 for (let zone of clickableZones) {
                     if (Math.hypot(pos.x - zone.x, pos.y - zone.y) < zone.radius) {
@@ -621,12 +624,10 @@
             canvas.style.cursor = 'default';
         }
 
-        // Événements Souris
         canvas.addEventListener('mousedown', handlePointerDown);
         canvas.addEventListener('mousemove', handlePointerMove);
         window.addEventListener('mouseup', handlePointerUp);
 
-        // Événements Mobile (Tactile)
         canvas.addEventListener('touchstart', handlePointerDown, {passive: false});
         canvas.addEventListener('touchmove', handlePointerMove, {passive: false});
         window.addEventListener('touchend', handlePointerUp);
@@ -638,25 +639,30 @@
 
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); 
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); 
+            // Chevauchement fort
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 15 + 5); 
             
-            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); 
-            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
+            document.getElementById('scale').value = (Math.random() * 0.4 + 1.2).toFixed(1); 
+            // Écrasements plus violents
+            document.getElementById('scaleX').value = (Math.random() * 0.4 + 0.6).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.8 + 0.8).toFixed(1); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); 
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
+            // Inclinaison très forte (aspect couché)
+            document.getElementById('skewX').value = (Math.random() * 1.6 - 0.8).toFixed(2); 
+            document.getElementById('skewY').value = (Math.random() * 0.4 - 0.2).toFixed(2); 
+            
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 25); 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 30 + 15); 
+            document.getElementById('waveFreq').value = (Math.random() * 1.5 + 0.8).toFixed(1); 
+            
             document.getElementById('blur').value = 0;
 
             useStroke = false; 
             document.getElementById('toggleStyleBtn').textContent = "Style : Rempli";
 
             document.getElementById('presetSelect').value = "";
-            manualOffsets = []; // Réinitialise les positions manuelles lors d'un nouveau jet aléatoire
+            manualOffsets = []; 
             renderCaptcha();
         });
 

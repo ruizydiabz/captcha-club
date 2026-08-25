@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
-    <!-- Le Favicon généré en SVG directement dans le code -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231100FF'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -15,14 +14,8 @@
         }
 
         /* --- CONFIGURATION GLOBALE --- */
-        html {
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-        
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
+        html { box-sizing: border-box; overflow-x: hidden; }
+        *, *:before, *:after { box-sizing: inherit; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -70,10 +63,7 @@
             margin-bottom: 12px;
         }
 
-        .row-group {
-            display: flex;
-            gap: 10px;
-        }
+        .row-group { display: flex; gap: 10px; }
 
         label {
             color: var(--white);
@@ -98,20 +88,9 @@
             transition: border 0.2s;
         }
         
-        input[type="text"]:focus, select:focus {
-            border-color: var(--white);
-        }
-        
-        input[type="color"] {
-            height: 40px;
-            cursor: pointer;
-            padding: 2px;
-        }
-
-        select option {
-            background-color: var(--blue);
-            color: var(--white);
-        }
+        input[type="text"]:focus, select:focus { border-color: var(--white); }
+        input[type="color"] { height: 40px; cursor: pointer; padding: 2px; }
+        select option { background-color: var(--blue); color: var(--white); }
 
         input[type="range"] {
             -webkit-appearance: none;
@@ -146,19 +125,9 @@
             width: 100%;
             transition: background 0.2s, color 0.2s;
         }
-        .btn-toggle:hover {
-            background-color: var(--white);
-            color: var(--blue);
-        }
-
-        .btn-danger {
-            border-color: var(--red);
-            color: var(--red);
-        }
-        .btn-danger:hover {
-            background-color: var(--red);
-            color: var(--white);
-        }
+        .btn-toggle:hover { background-color: var(--white); color: var(--blue); }
+        .btn-danger { border-color: var(--red); color: var(--red); }
+        .btn-danger:hover { background-color: var(--red); color: var(--white); }
 
         /* --- CONTENU PRINCIPAL DROITE --- */
         .main-content {
@@ -198,7 +167,6 @@
             box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
         }
 
-        /* --- BARRE D'ACTIONS --- */
         .action-bar {
             display: flex;
             gap: 15px;
@@ -218,10 +186,7 @@
             padding-right: 15px;
         }
 
-        .action-group:last-child { 
-            border: none; 
-            padding-right: 0; 
-        }
+        .action-group:last-child { border: none; padding-right: 0; }
 
         .btn-primary, .btn-vasy {
             padding: 10px 20px;
@@ -233,35 +198,20 @@
             transition: transform 0.1s, background 0.2s;
         }
         
-        .btn-primary {
-            background-color: var(--white);
-            color: var(--blue);
-            border: none;
-        }
+        .btn-primary { background-color: var(--white); color: var(--blue); border: none; }
         .btn-primary:active { transform: scale(0.95); }
 
-        .btn-vasy {
-            background-color: transparent;
-            color: var(--white);
-            border: 2px solid var(--white);
-        }
-        .btn-vasy:hover, .btn-vasy:active {
-            background-color: var(--white);
-            color: var(--blue);
-        }
+        .btn-vasy { background-color: transparent; color: var(--white); border: 2px solid var(--white); }
+        .btn-vasy:hover, .btn-vasy:active { background-color: var(--white); color: var(--blue); }
 
         @media (max-width: 768px) {
             body { flex-direction: column; height: auto; overflow: visible; }
             .main-content {
                 order: 1; position: sticky; top: 0; z-index: 100;
                 background-color: var(--blue); padding: 15px 10px;
-                border-bottom: 2px solid var(--white);
-                box-shadow: 0 10px 15px rgba(17, 0, 255, 0.9);
+                border-bottom: 2px solid var(--white); box-shadow: 0 10px 15px rgba(17, 0, 255, 0.9);
             }
-            .sidebar {
-                order: 2; width: 100%; border-right: none;
-                overflow-y: visible; padding: 20px;
-            }
+            .sidebar { order: 2; width: 100%; border-right: none; overflow-y: visible; padding: 20px; }
             .site-title { position: relative; top: 0; right: 0; font-size: 1.8rem; text-align: center; margin-bottom: 15px; }
             .canvas-container { margin-bottom: 15px; }
             .action-bar { padding: 10px; width: 100%; }
@@ -294,17 +244,15 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="gAvTyG5" maxlength="300">
+                <input type="text" id="textInput" value="Caralms" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
-                <select id="fontStyle">
-                    <option value="MIXED">Mélange de polices</option>
-                </select>
+                <select id="fontStyle"></select>
             </div>
             <div class="control-group">
                 <label>Couleur du texte</label>
-                <input type="color" id="textColor" value="#1100FF">
+                <input type="color" id="textColor" value="#000000">
             </div>
             <div class="control-group">
                 <button class="btn-toggle" id="toggleStyleBtn">Style : Rempli</button>
@@ -316,25 +264,25 @@
             <div class="section-title">Positionnement</div>
             <div class="control-group"><label>Position X</label><input type="range" id="posX" min="-200" max="200" value="0"></div>
             <div class="control-group"><label>Position Y</label><input type="range" id="posY" min="-100" max="100" value="0"></div>
-            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-10" max="40" value="5"></div>
+            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-25" max="40" value="-3"></div>
         </div>
 
         <!-- Distorsion -->
         <div>
             <div class="section-title">Distorsion & Étirement</div>
-            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="2.0" step="0.1" value="1.0"></div>
-            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.5" max="2.0" step="0.1" value="1.0"></div>
-            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.5" max="2.0" step="0.1" value="1.0"></div>
-            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
-            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-0.5" max="0.5" step="0.1" value="0.0"></div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="2.0" step="0.1" value="0.9"></div>
+            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3.0" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="-0.4"></div>
+            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
         </div>
 
         <!-- Chaos & Effets -->
         <div>
             <div class="section-title">Chaos & Effets</div>
-            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="45" value="5"></div>
-            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="30" value="5"></div>
-            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="3" step="0.1" value="1.0"></div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="2"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="20"></div>
+            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="0.8"></div>
             <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="5" step="0.5" value="0"></div>
         </div>
     </aside>
@@ -343,7 +291,7 @@
         <h1 class="site-title">captcha's club</h1>
         
         <div class="canvas-container">
-            <canvas id="captchaCanvas" width="500" height="180"></canvas>
+            <canvas id="captchaCanvas" width="400" height="150"></canvas>
         </div>
 
         <div class="action-bar">
@@ -365,16 +313,10 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
+        // Polices Serif classiques et épaisses pour reproduire le style de la photo
         const googleFonts = [
-            "VT323", "Inter", "Roboto", "Montserrat", "Oswald", "Playfair Display", 
-            "Bebas Neue", "Dancing Script", "Pacifico", "Anton", "Righteous", 
-            "Lobster", "Special Elite", "Monoton", "Orbitron", 
-            "Shadows Into Light", "Amatic SC", "Indie Flower", "Caveat"
-        ];
-
-        const trendyColors = [
-            "#1100FF", "#FF3366", "#00C49F", "#FF6B6B", "#6C5CE7", 
-            "#00B894", "#E17055", "#0984E3", "#D63031", "#2D3436", "#000000"  
+            "Playfair Display", "Merriweather", "Lora", "PT Serif", 
+            "Abril Fatface", "Crete Round", "Bree Serif", "Alfa Slab One"
         ];
 
         const fontSelect = document.getElementById('fontStyle');
@@ -384,6 +326,26 @@
             option.textContent = font;
             fontSelect.appendChild(option);
         });
+
+        // --- GÉNÉRATEUR DE MOTS ---
+        function generateNonsenseWord() {
+            const consonants = "bcdfghjklmnpqrstvwxyz";
+            const vowels = "aeiouy";
+            let word = "";
+            let length = Math.floor(Math.random() * 4) + 6; // Entre 6 et 9 caractères
+            let isConsonant = Math.random() > 0.5;
+            
+            for (let i = 0; i < length; i++) {
+                if (isConsonant) {
+                    word += consonants[Math.floor(Math.random() * consonants.length)];
+                } else {
+                    word += vowels[Math.floor(Math.random() * vowels.length)];
+                }
+                isConsonant = !isConsonant; 
+            }
+            // Majuscule au début comme sur l'image
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
 
         // --- GESTION DES FAVORIS (PRESETS) ---
         const presetSelect = document.getElementById('presetSelect');
@@ -431,10 +393,7 @@
 
         document.getElementById('deletePresetBtn').addEventListener('click', () => {
             let name = presetSelect.value;
-            if (!name) {
-                alert("Veuillez d'abord sélectionner un favori à supprimer.");
-                return;
-            }
+            if (!name) return;
             if(confirm(`Êtes-vous sûr de vouloir supprimer le favori "${name}" ?`)) {
                 const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
                 delete presets[name];
@@ -471,14 +430,9 @@
                 document.getElementById('waveFreq').value = p.waveFreq;
                 document.getElementById('blur').value = p.blur;
 
-                if (p.font !== "MIXED") {
-                    loadGoogleFont(p.font, renderCaptcha);
-                } else {
-                    renderCaptcha();
-                }
+                loadGoogleFont(p.font, renderCaptcha);
             }
         });
-        // -------------------------------------
 
         function loadGoogleFont(fontName, callback) {
             const fontId = 'font-' + fontName.replace(/\s+/g, '-').toLowerCase();
@@ -526,24 +480,15 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = `blur(${blur}px)`;
-
-            const fontSize = 60 * scale; 
-
-            let letterFonts = [];
-            for(let i = 0; i < text.length; i++) {
-                if (selectedFont === "MIXED") {
-                    let randFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-                    letterFonts.push(randFont);
-                } else {
-                    letterFonts.push(selectedFont);
-                }
-            }
+            const fontSize = 50 * scale; 
 
             ctx.save();
             let totalWidth = 0;
             let charWidths = [];
+            
+            ctx.font = `bold ${fontSize}px "${selectedFont}", serif`;
+            
             for(let i = 0; i < text.length; i++) {
-                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
                 let w = ctx.measureText(text[i]).width;
                 charWidths.push(w);
                 totalWidth += w;
@@ -554,7 +499,7 @@
 
             ctx.fillStyle = textColor; 
             ctx.strokeStyle = textColor;
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2;
 
             for(let i = 0; i < text.length; i++) {
                 ctx.save();
@@ -563,12 +508,13 @@
                 let y = (canvas.height / 2) + posY + Math.sin(i * waveFreq) * waveAmp;
                 
                 ctx.translate(x, y);
+
                 ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
                 
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
-                ctx.font = `bold ${fontSize}px "${letterFonts[i]}", sans-serif`;
+                ctx.font = `bold ${fontSize}px "${selectedFont}", serif`;
 
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
@@ -581,49 +527,40 @@
             ctx.filter = 'none'; 
         }
 
-        function getRandomTrendyColor() {
-            return trendyColors[Math.floor(Math.random() * trendyColors.length)];
-        }
-
         document.getElementById('randomBtn').addEventListener('click', () => {
-            const useMixed = Math.random() > 0.4; 
-            if (useMixed) {
-                document.getElementById('fontStyle').value = "MIXED";
-            } else {
-                const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-                document.getElementById('fontStyle').value = randomFont;
-            }
+            // Un mot généré, police classique, texte noir.
+            document.getElementById('textInput').value = generateNonsenseWord();
+            document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            document.getElementById('textColor').value = "#000000";
 
-            document.getElementById('posX').value = Math.floor(Math.random() * 20 - 10);
-            document.getElementById('posY').value = Math.floor(Math.random() * 20 - 10);
-            document.getElementById('letterSpacing').value = Math.floor(Math.random() * 15 + 2);
+            // Centrage classique
+            document.getElementById('posX').value = 0;
+            document.getElementById('posY').value = 0;
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 0.9).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 0.8).toFixed(1); 
-            document.getElementById('skewX').value = (Math.random() * 0.6 - 0.3).toFixed(2); 
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); // Très serré
+            
+            document.getElementById('scale').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); // Légèrement compressé
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); // Parfois étiré
+            
+            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); // Forte inclinaison vers l'avant (italique)
             document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 15); 
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15); 
-            document.getElementById('waveFreq').value = (Math.random() * 1.5).toFixed(1); 
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); // Très peu de rotation individuelle, c'est la vague qui fait le travail
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); // Vague très prononcée
+            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
             
-            document.getElementById('blur').value = Math.random() > 0.9 ? (Math.random() * 1.5).toFixed(1) : 0;
+            document.getElementById('blur').value = 0; // Aucun flou pour cet aspect net/brut
 
-            document.getElementById('textColor').value = getRandomTrendyColor();
+            useStroke = false; 
+            document.getElementById('toggleStyleBtn').textContent = "Style : Rempli";
 
-            useStroke = Math.random() > 0.7; 
-            document.getElementById('toggleStyleBtn').textContent = useStroke ? "Style : Contour" : "Style : Rempli";
-
-            // Réinitialise le select des favoris puisqu'on part sur de l'aléatoire
             presetSelect.value = "";
-
             renderCaptcha();
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
             const format = document.getElementById('exportFormat').value;
-            
             let fileName = prompt("Entrez le nom de votre fichier :", "mon_captcha");
             if (!fileName) return; 
 
@@ -636,7 +573,7 @@
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                tempCtx.fillStyle = '#FFFFFF';
+                tempCtx.fillStyle = '#FFFFFF'; // Blanc pur
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
                 tempCtx.drawImage(canvas, 0, 0);
                 
@@ -665,17 +602,13 @@
         
         fontSelect.addEventListener('change', (e) => {
             presetSelect.value = "";
-            if (e.target.value !== "MIXED") {
-                loadGoogleFont(e.target.value, renderCaptcha);
-            } else {
-                renderCaptcha();
-            }
+            loadGoogleFont(e.target.value, renderCaptcha);
         });
 
         // INIT
         loadPresetsList();
         loadAllFonts(() => {
-            renderCaptcha();
+            document.getElementById('randomBtn').click();
         });
     </script>
 </body>

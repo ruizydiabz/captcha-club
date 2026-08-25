@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23000000'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #FFFFFF;
@@ -150,7 +150,7 @@
             top: 20px;
             right: 30px;
             font-size: 2.5rem;
-            font-family: 'VT323', monospace;
+            font-family: monospace;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin: 0;
@@ -253,14 +253,14 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="valite" maxlength="300">
+                <input type="text" id="textInput" value="captcha" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
                 <select id="fontStyle"></select>
             </div>
             <div class="control-group">
-                <label>Couleur du texte</label>
+                <label>Couleur</label>
                 <input type="color" id="textColor" value="#000000">
             </div>
             <div class="control-group">
@@ -279,7 +279,7 @@
         <!-- Distorsion -->
         <div>
             <div class="section-title">Distorsion & Étirement</div>
-            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.2"></div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.3"></div>
             <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="2.0" step="0.1" value="0.9"></div>
             <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3.0" step="0.1" value="1.2"></div>
             <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="-0.4"></div>
@@ -289,10 +289,13 @@
         <!-- Chaos & Effets -->
         <div>
             <div class="section-title">Chaos & Effets</div>
-            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="2"></div>
-            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="20"></div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="0"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="15"></div>
             <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="0.8"></div>
             <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="5" step="0.5" value="0"></div>
+            
+            <div class="control-group"><label>Lignes de brouillage</label><input type="range" id="noiseLines" min="0" max="15" value="3"></div>
+            <div class="control-group"><label>Points (Bruit)</label><input type="range" id="noiseDots" min="0" max="500" value="100"></div>
         </div>
     </aside>
 
@@ -322,12 +325,23 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // Polices "Script" cursives pour reproduire l'effet manuscrit
+        // --- MEGA LISTE DE POLICES GOOGLE FONTS (+100 polices) ---
         const googleFonts = [
-            "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", 
-            "Yellowtail", "Parisienne", "Allura", "Alex Brush", 
-            "Mr De Haviland", "Leckerli One", "Cookie", "Damion"
-        ];
+            // Cursives & Manuscrites (Parfaites pour les Captchas fluides)
+            "Dancing Script", "Pacifico", "Great Vibes", "Sacramento", "Yellowtail", "Parisienne", "Allura", "Alex Brush", "Mr De Haviland", "Leckerli One", "Cookie", "Damion", "Caveat", "Satisfy", "Courgette", "Handlee", "Tangerine", "Kalam", "Marck Script", "Homemade Apple", "Nothing You Could Do", "Covered By Your Grace", "Shadows Into Light", "Amatic SC", "Indie Flower",
+            
+            // Serif (Classiques, élégantes, idéales avec forte distorsion)
+            "Playfair Display", "Merriweather", "Lora", "PT Serif", "Abril Fatface", "Crete Round", "Bree Serif", "Alfa Slab One", "Roboto Slab", "EB Garamond", "Libre Baskerville", "Cormorant Garamond", "Bitter", "Crimson Text", "Arvo", "Zilla Slab", "Josefin Slab", "Vollkorn", "Rokkitt",
+            
+            // Sans-Serif (Modernes, lisibles)
+            "Roboto", "Open Sans", "Lato", "Montserrat", "Oswald", "Source Sans Pro", "Raleway", "Ubuntu", "Poppins", "Nunito", "Rubik", "Work Sans", "Fira Sans", "Quicksand", "Karla", "Mukta", "Inconsolata", "Dosis", "Anton", "Cabin", "Hind", "Fjalla One", "Oxygen", "Signika",
+            
+            // Display / Excentriques (Gros impact visuel)
+            "Righteous", "Bangers", "Carter One", "Fredoka One", "Permanent Marker", "Lobster", "Righteous", "Cinzel", "Acme", "Russo One", "Sigmar One", "Chewy", "Bebas Neue", "Passion One", "Concert One", "Patua One", "Fascinate Inline", "Luckiest Guy", "Titan One", "Squada One", "Creepster", "Eater", "Nosifer", "Freckle Face",
+            
+            // Monospace (Style Code / Hacker)
+            "Roboto Mono", "Space Mono", "Source Code Pro", "IBM Plex Mono", "Inconsolata", "PT Mono", "Share Tech Mono", "Cutive Mono", "VT323", "Anonymous Pro"
+        ].sort(); // Tri alphabétique pour le menu
 
         const fontSelect = document.getElementById('fontStyle');
         googleFonts.forEach(font => {
@@ -337,7 +351,6 @@
             fontSelect.appendChild(option);
         });
 
-        // --- GESTION DES FAVORIS (PRESETS) ---
         function loadPresetsList() {
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
             const presetSelect = document.getElementById('presetSelect');
@@ -370,7 +383,9 @@
                 randomRot: document.getElementById('randomRot').value,
                 waveAmp: document.getElementById('waveAmp').value,
                 waveFreq: document.getElementById('waveFreq').value,
-                blur: document.getElementById('blur').value
+                blur: document.getElementById('blur').value,
+                noiseLines: document.getElementById('noiseLines').value,
+                noiseDots: document.getElementById('noiseDots').value
             };
 
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
@@ -418,11 +433,14 @@
                 document.getElementById('waveAmp').value = p.waveAmp;
                 document.getElementById('waveFreq').value = p.waveFreq;
                 document.getElementById('blur').value = p.blur;
+                document.getElementById('noiseLines').value = p.noiseLines || 0;
+                document.getElementById('noiseDots').value = p.noiseDots || 0;
 
                 loadGoogleFont(p.font, renderCaptcha);
             }
         });
 
+        // Lazy Loading : Ne charge que la police demandée
         function loadGoogleFont(fontName, callback) {
             const fontId = 'font-' + fontName.replace(/\s+/g, '-').toLowerCase();
             if (!document.getElementById(fontId)) {
@@ -431,20 +449,42 @@
                 link.rel = 'stylesheet';
                 link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}&display=swap`;
                 document.head.appendChild(link);
-                document.fonts.load(`16px "${fontName}"`).then(() => callback());
+                // On attend que la police soit chargée
+                document.fonts.load(`16px "${fontName}"`).then(() => {
+                    if(callback) callback();
+                });
             } else {
-                callback();
+                if(callback) callback();
             }
         }
 
-        function loadAllFonts(callback) {
-            let loaded = 0;
-            googleFonts.forEach(font => {
-                loadGoogleFont(font, () => {
-                    loaded++;
-                    if(loaded === googleFonts.length && callback) callback();
-                });
-            });
+        function drawNoise(color, numLines, numDots) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.strokeStyle = color;
+
+            // Dessiner les points (mouchetis)
+            for (let i = 0; i < numDots; i++) {
+                ctx.globalAlpha = Math.random() * 0.8 + 0.2;
+                ctx.beginPath();
+                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Dessiner les lignes de brouillage
+            ctx.globalAlpha = 0.7;
+            for (let i = 0; i < numLines; i++) {
+                ctx.lineWidth = Math.random() * 2 + 0.5;
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.bezierCurveTo(
+                    Math.random() * canvas.width, Math.random() * canvas.height,
+                    Math.random() * canvas.width, Math.random() * canvas.height,
+                    Math.random() * canvas.width, Math.random() * canvas.height
+                );
+                ctx.stroke();
+            }
+            ctx.restore();
         }
 
         function renderCaptcha() {
@@ -466,16 +506,22 @@
             const waveAmp = parseFloat(document.getElementById('waveAmp').value);
             const waveFreq = parseFloat(document.getElementById('waveFreq').value);
             const blur = parseFloat(document.getElementById('blur').value);
+            
+            const noiseLines = parseInt(document.getElementById('noiseLines').value);
+            const noiseDots = parseInt(document.getElementById('noiseDots').value);
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.filter = `blur(${blur}px)`;
-            const fontSize = 50 * scale; 
+            
+            drawNoise(textColor, noiseLines, noiseDots);
+
+            const fontSize = 55 * scale; 
 
             ctx.save();
             let totalWidth = 0;
             let charWidths = [];
             
-            ctx.font = `bold ${fontSize}px "${selectedFont}", cursive`;
+            ctx.font = `bold ${fontSize}px "${selectedFont}", sans-serif`;
             
             for(let i = 0; i < text.length; i++) {
                 let w = ctx.measureText(text[i]).width;
@@ -503,7 +549,7 @@
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
                 
-                ctx.font = `bold ${fontSize}px "${selectedFont}", cursive`;
+                ctx.font = `bold ${fontSize}px "${selectedFont}", sans-serif`;
 
                 if(useStroke) { ctx.strokeText(text[i], 0, 0); } 
                 else { ctx.fillText(text[i], 0, 0); }
@@ -517,39 +563,38 @@
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
-            // Le texte saisi reste intact, on ne génère plus de mot aléatoire !
+            const randomFont = googleFonts[Math.floor(Math.random() * googleFonts.length)];
+            document.getElementById('fontStyle').value = randomFont;
             
-            document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
-            document.getElementById('textColor').value = "#000000"; // Noir forcé
+            document.getElementById('textColor').value = "#000000"; 
 
-            document.getElementById('posX').value = 0;
-            document.getElementById('posY').value = 0;
+            document.getElementById('posX').value = Math.floor(Math.random() * 20 - 10);
+            document.getElementById('posY').value = Math.floor(Math.random() * 10 - 5);
             
-            // Espacement très doux pour que les lettres se lient sans s'écraser
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 3) + 1; // Donne de -2 à +1
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 6 + 1); 
             
-            document.getElementById('scale').value = (Math.random() * 0.3 + 1.1).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.9).toFixed(1); // Moins écrasé
-            document.getElementById('scaleY').value = (Math.random() * 0.3 + 1.0).toFixed(1); // Hauteur normale
+            document.getElementById('scale').value = (Math.random() * 0.3 + 1.2).toFixed(1); 
+            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
             
-            // Inclinaison douce façon italique
-            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.2).toFixed(2); 
-            document.getElementById('skewY').value = (Math.random() * 0.1 - 0.05).toFixed(2); 
+            document.getElementById('skewX').value = (Math.random() * -0.6 - 0.2).toFixed(2); 
+            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            // Pas de rotation pour garder la lisibilité des lettres
-            document.getElementById('randomRot').value = 0; 
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 6); 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
+            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
             
-            // Vague douce pour l'effet fluide
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 5); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.5 + 0.5).toFixed(1); 
+            document.getElementById('noiseLines').value = Math.floor(Math.random() * 5 + 2); 
+            document.getElementById('noiseDots').value = Math.floor(Math.random() * 200 + 50); 
             
             document.getElementById('blur').value = 0;
 
             useStroke = false; 
             document.getElementById('toggleStyleBtn').textContent = "Style : Rempli";
-
             document.getElementById('presetSelect').value = "";
-            renderCaptcha();
+            
+            // Chargement de la police puis rendu
+            loadGoogleFont(randomFont, renderCaptcha);
         });
 
         document.getElementById('exportBtn').addEventListener('click', () => {
@@ -600,8 +645,11 @@
 
         // INIT
         loadPresetsList();
-        loadAllFonts(() => {
-            // First render with default visual state without overwriting standard input.
+        
+        // Initialiser avec la première police de la liste
+        const initialFont = googleFonts[0];
+        document.getElementById('fontStyle').value = initialFont;
+        loadGoogleFont(initialFont, () => {
             document.getElementById('randomBtn').click();
         });
     </script>

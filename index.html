@@ -253,7 +253,7 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="Caralms" maxlength="300">
+                <input type="text" id="textInput" value="Captcha" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
@@ -273,26 +273,26 @@
             <div class="section-title">Positionnement</div>
             <div class="control-group"><label>Position X</label><input type="range" id="posX" min="-200" max="200" value="0"></div>
             <div class="control-group"><label>Position Y</label><input type="range" id="posY" min="-100" max="100" value="0"></div>
-            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-25" max="40" value="-3"></div>
+            <div class="control-group"><label>Espacement Lettres</label><input type="range" id="letterSpacing" min="-40" max="40" value="-10"></div>
         </div>
 
-        <!-- Distorsion -->
+        <!-- Distorsion EXTRÊME -->
         <div>
             <div class="section-title">Distorsion & Étirement</div>
-            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="3.0" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.3" max="2.0" step="0.1" value="0.9"></div>
-            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.3" max="3.0" step="0.1" value="1.2"></div>
-            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-1.5" max="1.5" step="0.1" value="-0.4"></div>
-            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.0" max="1.0" step="0.1" value="0.0"></div>
+            <div class="control-group"><label>Échelle Globale</label><input type="range" id="scale" min="0.1" max="4.0" step="0.1" value="1.5"></div>
+            <div class="control-group"><label>Étirer Largeur (X)</label><input type="range" id="scaleX" min="0.1" max="3.0" step="0.1" value="0.8"></div>
+            <div class="control-group"><label>Étirer Hauteur (Y)</label><input type="range" id="scaleY" min="0.1" max="4.0" step="0.1" value="1.5"></div>
+            <div class="control-group"><label>Inclinaison H (Skew X)</label><input type="range" id="skewX" min="-2.5" max="2.5" step="0.1" value="-0.8"></div>
+            <div class="control-group"><label>Inclinaison V (Skew Y)</label><input type="range" id="skewY" min="-1.5" max="1.5" step="0.1" value="0.0"></div>
         </div>
 
         <!-- Chaos & Effets -->
         <div>
             <div class="section-title">Chaos & Effets</div>
-            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="90" value="2"></div>
-            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="60" value="20"></div>
-            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="5" step="0.1" value="0.8"></div>
-            <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="5" step="0.5" value="0"></div>
+            <div class="control-group"><label>Rotation Aléatoire</label><input type="range" id="randomRot" min="0" max="180" value="10"></div>
+            <div class="control-group"><label>Amplitude Vague</label><input type="range" id="waveAmp" min="0" max="100" value="30"></div>
+            <div class="control-group"><label>Fréquence Vague</label><input type="range" id="waveFreq" min="0" max="10" step="0.1" value="1.5"></div>
+            <div class="control-group"><label>Flou (Blur)</label><input type="range" id="blur" min="0" max="10" step="0.5" value="0"></div>
         </div>
     </aside>
 
@@ -335,9 +335,11 @@
             fontSelect.appendChild(option);
         });
 
+        // --- GESTION DES FAVORIS (PRESETS) ---
+        const presetSelect = document.getElementById('presetSelect');
+
         function loadPresetsList() {
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
-            const presetSelect = document.getElementById('presetSelect');
             presetSelect.innerHTML = '<option value="">-- Choisir un favori --</option>';
             for (let name in presets) {
                 let opt = document.createElement('option');
@@ -374,22 +376,22 @@
             presets[name] = preset;
             localStorage.setItem('captchaPresets', JSON.stringify(presets));
             loadPresetsList();
-            document.getElementById('presetSelect').value = name;
+            presetSelect.value = name;
         });
 
         document.getElementById('deletePresetBtn').addEventListener('click', () => {
-            let name = document.getElementById('presetSelect').value;
+            let name = presetSelect.value;
             if (!name) return;
             if(confirm(`Êtes-vous sûr de vouloir supprimer le favori "${name}" ?`)) {
                 const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
                 delete presets[name];
                 localStorage.setItem('captchaPresets', JSON.stringify(presets));
                 loadPresetsList();
-                document.getElementById('presetSelect').value = "";
+                presetSelect.value = "";
             }
         });
 
-        document.getElementById('presetSelect').addEventListener('change', (e) => {
+        presetSelect.addEventListener('change', (e) => {
             let name = e.target.value;
             if (!name) return;
             
@@ -495,7 +497,13 @@
                 
                 ctx.translate(x, y);
 
-                ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
+                // Déformation aléatoire pure PAR LETTRE pour détruire l'aspect trop propre de la typo
+                let charScaleX = scaleX * (1 + (Math.random() * 0.4 - 0.2)); 
+                let charScaleY = scaleY * (1 + (Math.random() * 0.4 - 0.2)); 
+                let charSkewX = skewX + (Math.random() * 0.6 - 0.3);
+                let charSkewY = skewY + (Math.random() * 0.3 - 0.15);
+
+                ctx.transform(charScaleX, charSkewY, charSkewX, charScaleY, 0, 0); 
                 
                 let currentRot = (Math.random() * randomRot * 2 - randomRot) * (Math.PI / 180);
                 ctx.rotate(currentRot);
@@ -520,18 +528,21 @@
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
             
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); 
+            // Chevauchement forcé beaucoup plus prononcé
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 15 + 5); 
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); 
+            document.getElementById('scale').value = (Math.random() * 0.5 + 1.2).toFixed(1); 
+            // Écrasement et étirement beaucoup plus forts
+            document.getElementById('scaleX').value = (Math.random() * 0.6 + 0.4).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 1.5 + 0.8).toFixed(1); 
             
-            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); 
-            document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
+            // Inclinaison (Skew) extrême pour l'aspect italique couché
+            document.getElementById('skewX').value = (Math.random() * 2.4 - 1.2).toFixed(2); 
+            document.getElementById('skewY').value = (Math.random() * 0.8 - 0.4).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); 
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 45); // Rotation très forte 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 40 + 10); // Grosse ondulation
+            document.getElementById('waveFreq').value = (Math.random() * 1.5 + 0.5).toFixed(1); 
             
             document.getElementById('blur').value = 0;
 
@@ -556,7 +567,7 @@
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                tempCtx.fillStyle = '#FFFFFF'; 
+                tempCtx.fillStyle = '#FFFFFF'; // Blanc pur
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
                 tempCtx.drawImage(canvas, 0, 0);
                 
@@ -591,7 +602,6 @@
         // INIT
         loadPresetsList();
         loadAllFonts(() => {
-            // First render with default visual state without overwriting standard input.
             document.getElementById('randomBtn').click();
         });
     </script>

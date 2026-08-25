@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captcha's Club Generator</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231100FF'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23000000'/><text x='50' y='67' text-anchor='middle' fill='%23FFFFFF' font-size='65' font-family='monospace' font-weight='bold'>c</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -253,7 +253,7 @@
             <div class="section-title">Base</div>
             <div class="control-group">
                 <label>Texte</label>
-                <input type="text" id="textInput" value="Captcha" maxlength="300">
+                <input type="text" id="textInput" value="Caralms" maxlength="300">
             </div>
             <div class="control-group">
                 <label>Police Google</label>
@@ -312,7 +312,7 @@
                 <button class="btn-primary" id="exportBtn">Exporter</button>
             </div>
             <div class="action-group">
-                <button class="btn-vasy" id="randomBtn">Vas-y 🎲</button>
+                <button class="btn-vasy" id="randomBtn">Vas-y</button>
             </div>
         </div>
     </main>
@@ -322,7 +322,6 @@
         const ctx = canvas.getContext('2d');
         let useStroke = false;
 
-        // Polices Serif classiques et épaisses pour reproduire le style de la photo
         const googleFonts = [
             "Playfair Display", "Merriweather", "Lora", "PT Serif", 
             "Abril Fatface", "Crete Round", "Bree Serif", "Alfa Slab One"
@@ -336,11 +335,9 @@
             fontSelect.appendChild(option);
         });
 
-        // --- GESTION DES FAVORIS (PRESETS) ---
-        const presetSelect = document.getElementById('presetSelect');
-
         function loadPresetsList() {
             const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
+            const presetSelect = document.getElementById('presetSelect');
             presetSelect.innerHTML = '<option value="">-- Choisir un favori --</option>';
             for (let name in presets) {
                 let opt = document.createElement('option');
@@ -377,22 +374,22 @@
             presets[name] = preset;
             localStorage.setItem('captchaPresets', JSON.stringify(presets));
             loadPresetsList();
-            presetSelect.value = name;
+            document.getElementById('presetSelect').value = name;
         });
 
         document.getElementById('deletePresetBtn').addEventListener('click', () => {
-            let name = presetSelect.value;
+            let name = document.getElementById('presetSelect').value;
             if (!name) return;
             if(confirm(`Êtes-vous sûr de vouloir supprimer le favori "${name}" ?`)) {
                 const presets = JSON.parse(localStorage.getItem('captchaPresets') || '{}');
                 delete presets[name];
                 localStorage.setItem('captchaPresets', JSON.stringify(presets));
                 loadPresetsList();
-                presetSelect.value = "";
+                document.getElementById('presetSelect').value = "";
             }
         });
 
-        presetSelect.addEventListener('change', (e) => {
+        document.getElementById('presetSelect').addEventListener('change', (e) => {
             let name = e.target.value;
             if (!name) return;
             
@@ -517,33 +514,31 @@
         }
 
         document.getElementById('randomBtn').addEventListener('click', () => {
-            // Modifie la police de manière aléatoire
             document.getElementById('fontStyle').value = googleFonts[Math.floor(Math.random() * googleFonts.length)];
             document.getElementById('textColor').value = "#000000";
 
-            // Centrage classique
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
             
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); // Très serré
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 5); 
             
             document.getElementById('scale').value = (Math.random() * 0.4 + 1.1).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); // Légèrement compressé
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); // Parfois étiré
+            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.8).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.0).toFixed(1); 
             
-            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); // Forte inclinaison vers l'avant (italique)
+            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.3).toFixed(2); 
             document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); // Très peu de rotation individuelle, c'est la vague qui fait le travail
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); // Vague très prononcée
+            document.getElementById('randomRot').value = Math.floor(Math.random() * 4); 
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
             document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.6).toFixed(1); 
             
-            document.getElementById('blur').value = 0; // Aucun flou pour cet aspect net/brut
+            document.getElementById('blur').value = 0;
 
             useStroke = false; 
             document.getElementById('toggleStyleBtn').textContent = "Style : Rempli";
 
-            presetSelect.value = "";
+            document.getElementById('presetSelect').value = "";
             renderCaptcha();
         });
 
@@ -561,7 +556,7 @@
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                tempCtx.fillStyle = '#FFFFFF'; // Blanc pur
+                tempCtx.fillStyle = '#FFFFFF'; 
                 tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
                 tempCtx.drawImage(canvas, 0, 0);
                 
@@ -583,19 +578,20 @@
         const inputs = document.querySelectorAll('input:not([type="button"])');
         inputs.forEach(input => { 
             input.addEventListener('input', () => {
-                presetSelect.value = "";
+                document.getElementById('presetSelect').value = "";
                 renderCaptcha();
             }); 
         });
         
         fontSelect.addEventListener('change', (e) => {
-            presetSelect.value = "";
+            document.getElementById('presetSelect').value = "";
             loadGoogleFont(e.target.value, renderCaptcha);
         });
 
         // INIT
         loadPresetsList();
         loadAllFonts(() => {
+            // First render with default visual state without overwriting standard input.
             document.getElementById('randomBtn').click();
         });
     </script>

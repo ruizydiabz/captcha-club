@@ -354,7 +354,7 @@
             const consonants = "bcdfghjklmnpqrstvwxyz";
             const vowels = "aeiouy";
             let word = "";
-            let length = Math.floor(Math.random() * 4) + 6; 
+            let length = Math.floor(Math.random() * 3) + 6; 
             let isConsonant = Math.random() > 0.5;
             
             for (let i = 0; i < length; i++) {
@@ -365,7 +365,6 @@
                 }
                 isConsonant = !isConsonant; 
             }
-            // Tout en minuscules pour l'effet fluide
             return word.toLowerCase();
         }
 
@@ -548,8 +547,7 @@
 
                 ctx.translate(x, y);
 
-                // Application de la déformation GLOBALE (pas de chaos par lettre)
-                // Cela permet aux polices cursives de rester fluides et attachées.
+                // Application de la déformation globale uniquement
                 ctx.transform(scaleX, skewY, skewX, scaleY, 0, 0); 
                 
                 // Très légère rotation aléatoire si besoin, mais proche de 0 par défaut
@@ -662,22 +660,24 @@
             document.getElementById('posX').value = 0;
             document.getElementById('posY').value = 0;
             
-            // Espacement très rapproché pour lier la typographie cursive
-            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 8 + 4); 
+            // Espacement très doux, on évite d'empiler
+            document.getElementById('letterSpacing').value = -Math.floor(Math.random() * 4); 
             
-            document.getElementById('scale').value = (Math.random() * 0.4 + 1.2).toFixed(1); 
-            document.getElementById('scaleX').value = (Math.random() * 0.2 + 0.7).toFixed(1); // Très condensé
-            document.getElementById('scaleY').value = (Math.random() * 0.4 + 1.2).toFixed(1); // Très étiré verticalement
+            document.getElementById('scale').value = (Math.random() * 0.3 + 1.2).toFixed(1); 
+            // Moins d'écrasement horizontal pour garder les polices Script lisibles
+            document.getElementById('scaleX').value = (Math.random() * 0.3 + 0.9).toFixed(1); 
+            document.getElementById('scaleY').value = (Math.random() * 0.3 + 1.0).toFixed(1); 
             
-            // Forte inclinaison italique
-            document.getElementById('skewX').value = (Math.random() * -0.6 - 0.4).toFixed(2); 
+            // Inclinaison modérée
+            document.getElementById('skewX').value = (Math.random() * -0.4 - 0.1).toFixed(2); 
             document.getElementById('skewY').value = (Math.random() * 0.2 - 0.1).toFixed(2); 
             
-            // Rotation à 0 pour garder la ligne de la police script fluide
+            // Aucune rotation chaotique individuelle pour laisser couler le texte
             document.getElementById('randomRot').value = 0; 
-            // Amplitude forte pour la vague
-            document.getElementById('waveAmp').value = Math.floor(Math.random() * 25 + 15); 
-            document.getElementById('waveFreq').value = (Math.random() * 0.8 + 0.8).toFixed(1); 
+            
+            // Amplitude moyenne à forte, mais pas explosive
+            document.getElementById('waveAmp').value = Math.floor(Math.random() * 15 + 10); 
+            document.getElementById('waveFreq').value = (Math.random() * 0.5 + 0.8).toFixed(1); 
             
             document.getElementById('blur').value = 0;
 
